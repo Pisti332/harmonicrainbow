@@ -3,6 +3,7 @@ package com.harmonicrainbow.userservice.service;
 import com.harmonicrainbow.userservice.model.DTOS.SignupForm;
 import com.harmonicrainbow.userservice.model.User;
 import com.harmonicrainbow.userservice.repository.UsersRepo;
+import com.harmonicrainbow.userservice.service.utility.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +12,6 @@ import java.util.*;
 @Service
 public class SignupService {
     private UsersRepo usersRepo;
-    private static final String RFC5322_EMAIL_VALIDATOR_REGEX = "^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
     private EmailSenderService emailSenderService;
     private static final String EMAIL_ADDRESS = "harmonicrainbow7@gmail.com";
     private static final String DOMAIN = "192.168.1.65";
@@ -25,17 +25,12 @@ public class SignupService {
             this.MESSAGE = MESSAGE;
             this.PASSWORD_VALIDATOR_REGEX = PASSWORD_VALIDATOR_REGEX;
         }
-
-
     }
 
     @Autowired
     public SignupService(UsersRepo usersRepo, EmailSenderService emailSenderService) {
         this.usersRepo = usersRepo;
         this.emailSenderService = emailSenderService;
-    }
-    private boolean validateEmail(String email) {
-        return email.matches(RFC5322_EMAIL_VALIDATOR_REGEX);
     }
     private boolean validatePassword(String password) {
         return password.matches(PasswordValidator.VERSION1.PASSWORD_VALIDATOR_REGEX);
@@ -59,7 +54,7 @@ public class SignupService {
         validation.put("isSignupSuccessful", "true");
         validation.put("reason", "everything's valid, email sent for confirmation");
 
-        if (!validateEmail(signupForm.email())) {
+        if (!Validator.validateEmail(signupForm.email())) {
             validation.put("isSignupSuccessful", "false");
             validation.put("reason", "wrong email format");
             return validation;
