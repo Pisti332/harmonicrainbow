@@ -10,7 +10,7 @@ import java.util.UUID;
 public class User {
     public User(String email, String password, boolean isActive, UUID emailConfirmationToken) {
         this.email = email;
-        this.password = password;
+        this.password = String.valueOf(password.hashCode());
         this.isActive = isActive;
         this.emailConfirmationToken = emailConfirmationToken;
         this.registryDate = LocalDate.now();

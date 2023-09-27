@@ -43,6 +43,7 @@ public class SignupService {
         return users.size() > 0;
     }
     private void sendEmail(UUID emailConfirmationToken, String email) {
+
         emailSenderService.sendEmail(
                 EMAIL_ADDRESS,
                 email,
@@ -51,19 +52,21 @@ public class SignupService {
     }
     public Map<String, String> registerUser(SignupForm signupForm) {
         Map<String, String> validation = new HashMap<>();
+
         validation.put("isSignupSuccessful", "true");
         validation.put("reason", "everything's valid, email sent for confirmation");
+
         if (!validateEmail(signupForm.email())) {
             validation.put("isSignupSuccessful", "false");
             validation.put("reason", "wrong email format");
             return validation;
         }
-        else if (!validatePassword(signupForm.password())) {
+        if (!validatePassword(signupForm.password())) {
             validation.put("isSignupSuccessful", "false");
             validation.put("reason", PasswordValidator.VERSION1.MESSAGE);
             return validation;
         }
-        else if (checkIfAlreadyRegistered(signupForm.email())) {
+        if (checkIfAlreadyRegistered(signupForm.email())) {
             validation.put("isSignupSuccessful", "false");
             validation.put("reason", "already registered email");
             return validation;
