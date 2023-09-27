@@ -1,8 +1,11 @@
 package com.harmonicrainbow.userservice.model;
 
 import jakarta.persistence.*;
+import jdk.jfr.Timestamp;
 
+import java.sql.Time;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -13,7 +16,7 @@ public class User {
         this.password = String.valueOf(password.hashCode());
         this.isActive = isActive;
         this.emailConfirmationToken = emailConfirmationToken;
-        this.registryDate = LocalDate.now();
+        this.registryDate = LocalDateTime.now();
     }
 
     public User() {
@@ -30,6 +33,6 @@ public class User {
     private boolean isActive;
     private UUID emailConfirmationToken;
     @Column(nullable = false)
-    private LocalDate registryDate;
+    private LocalDateTime registryDate;
 
 }
