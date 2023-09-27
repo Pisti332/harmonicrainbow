@@ -1,6 +1,6 @@
 package com.harmonicrainbow.userservice.service;
 
-import com.harmonicrainbow.userservice.model.SignupForm;
+import com.harmonicrainbow.userservice.model.DTOS.SignupForm;
 import com.harmonicrainbow.userservice.model.User;
 import com.harmonicrainbow.userservice.repository.UsersRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +13,7 @@ public class SignupService {
     private UsersRepo usersRepo;
     private static final String RFC5322_EMAIL_VALIDATOR_REGEX = "^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
     private EmailSenderService emailSenderService;
+    private static final String EMAIL_ADDRESS = "harmonicrainbow7@gmail.com";
 
     private enum PasswordValidator {
         VERSION1("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$", "wrong password format: must have at least\n  8 characters\n one uppercase English letter\n one lowercase English letter\n one digit\n one special character");
@@ -41,10 +42,10 @@ public class SignupService {
         List<User> users = usersRepo.findByEmail(email);
         return users.size() > 0;
     }
-    private void sendEmail(UUID emailConfirmationToken) {
+    private void sendEmail(UUID emailConfirmationToken, String email) {
         emailSenderService.sendEmail(
-                "harmonicrainbow7@gmail.com",
-                "varga.istvan.p1@gmail.com",
+                EMAIL_ADDRESS,
+                email,
                 "confirmation",
                 emailConfirmationToken.toString());
     }
@@ -69,7 +70,7 @@ public class SignupService {
         }
         UUID emailConfirmationToken = UUID.randomUUID();
         usersRepo.save(new User(signupForm.email(), signupForm.password(), false, emailConfirmationToken));
-        sendEmail(emailConfirmationToken);
+        sendEmail(emailConfirmationToken, signupForm.email());
         // generate token +
         // store token +
         // send api call with token via email

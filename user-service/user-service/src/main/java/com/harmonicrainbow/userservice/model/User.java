@@ -2,6 +2,7 @@ package com.harmonicrainbow.userservice.model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
@@ -12,6 +13,7 @@ public class User {
         this.password = password;
         this.isActive = isActive;
         this.emailConfirmationToken = emailConfirmationToken;
+        this.registryDate = LocalDate.now();
     }
 
     public User() {
@@ -27,5 +29,7 @@ public class User {
     @Column(nullable = false)
     private boolean isActive;
     private UUID emailConfirmationToken;
+    @Column(nullable = false)
+    private LocalDate registryDate;
 
 }
