@@ -14,6 +14,8 @@ public class SignupService {
     private static final String RFC5322_EMAIL_VALIDATOR_REGEX = "^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
     private EmailSenderService emailSenderService;
     private static final String EMAIL_ADDRESS = "harmonicrainbow7@gmail.com";
+    private static final String DOMAIN = "192.168.1.65";
+    private static final String PORT = "8060";
 
     private enum PasswordValidator {
         VERSION1("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$", "wrong password format: must have at least\n  8 characters\n one uppercase English letter\n one lowercase English letter\n one digit\n one special character");
@@ -43,12 +45,13 @@ public class SignupService {
         return users.size() > 0;
     }
     private void sendEmail(UUID emailConfirmationToken, String email) {
-
+        String confirmationCall = "http://" + DOMAIN + ":" + PORT + "/api/user/confirm?" + "token=" + emailConfirmationToken;
+        String body = "Please confirm your email address by clicking on the following link: \n" + confirmationCall;
         emailSenderService.sendEmail(
                 EMAIL_ADDRESS,
                 email,
                 "confirmation",
-                emailConfirmationToken.toString());
+                body);
     }
     public Map<String, String> registerUser(SignupForm signupForm) {
         Map<String, String> validation = new HashMap<>();
@@ -72,12 +75,28 @@ public class SignupService {
             return validation;
         }
         UUID emailConfirmationToken = UUID.randomUUID();
-        usersRepo.save(new User(signupForm.email(), signupForm.password(), false, emailConfirmationToken));
+        usersRepo.save(
+                new User(
+                        signupForm.email(),
+                        signupForm.password(),
+                        false,
+                        emailConfirmationToken));
         sendEmail(emailConfirmationToken, signupForm.email());
-        // generate token +
-        // store token +
-        // send api call with token via email
-
         return validation;
+    }
+    public Map<String, String> checkToken(String token) {
+        Map<String, String> response = new HashMap<>();
+        response.put("validation successful", "true");
+        UUID uuidToken = UUID.fromString(token);
+        List<User> users = usersRepo.findByEmailConfirmationToken(uuidToken);
+        if (users.size() > 0) {
+            User user = users.get(0);
+            user.setActive(true);
+            user.setEmailConfirmationToken(null);
+            usersRepo.save(user);
+            return response;
+        }
+        response.put("validation successful", "false");
+        return response;
     }
 }

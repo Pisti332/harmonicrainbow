@@ -2,11 +2,9 @@ package com.harmonicrainbow.userservice.controller;
 
 import com.harmonicrainbow.userservice.model.DTOS.SignupForm;
 import com.harmonicrainbow.userservice.service.SignupService;
+import jakarta.ws.rs.QueryParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -21,5 +19,9 @@ public class UserController {
     @PostMapping("signup")
     public Map<String, String> signupUser(@RequestBody SignupForm signupForm) {
         return signupService.registerUser(signupForm);
+    }
+    @GetMapping("confirm")
+    public Map<String, String> confirmEmail(@RequestParam String token) {
+        return signupService.checkToken(token);
     }
 }
