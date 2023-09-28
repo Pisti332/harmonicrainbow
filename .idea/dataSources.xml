@@ -8,5 +8,12 @@
       <jdbc-url>jdbc:postgresql://localhost:5432/harmonicrainbow_users</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="harmonicrainbow_images@localhost" uuid="1e72572c-59a0-4419-b445-095c9cd4164b">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://localhost:5432/harmonicrainbow_images</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>
