@@ -5,6 +5,9 @@ import com.harmonicrainbow.userservice.model.User;
 import com.harmonicrainbow.userservice.repository.UsersRepo;
 import com.harmonicrainbow.userservice.service.utility.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -40,7 +43,7 @@ public class SignupService {
         return users.size() > 0;
     }
     private void sendEmail(UUID emailConfirmationToken, String email) {
-        String confirmationCall = "http://" + DOMAIN + ":" + PORT + "/api/user/confirm?" + "token=" + emailConfirmationToken;
+        String confirmationCall = "http://" + DOMAIN + ":" + PORT + "/api/user/confirmtoken?" + "token=" + emailConfirmationToken;
         String body = "Please confirm your email address by clicking on the following link: \n" + confirmationCall;
         emailSenderService.sendEmail(
                 EMAIL_ADDRESS,
@@ -48,27 +51,25 @@ public class SignupService {
                 "confirmation",
                 body);
     }
-    public Map<String, String> registerUser(SignupForm signupForm) {
+    public ResponseEntity<Object> registerUser(SignupForm signupForm) {
         Map<String, String> validation = new HashMap<>();
-
-        validation.put("isSignupSuccessful", "true");
-        validation.put("reason", "everything's valid, email sent for confirmation");
-
         if (!Validator.validateEmail(signupForm.email())) {
             validation.put("isSignupSuccessful", "false");
             validation.put("reason", "wrong email format");
-            return validation;
+            return new ResponseEntity<>(validation, HttpStatus.BAD_REQUEST);
         }
         if (!validatePassword(signupForm.password())) {
             validation.put("isSignupSuccessful", "false");
             validation.put("reason", PasswordValidator.VERSION1.MESSAGE);
-            return validation;
+            return new ResponseEntity<>(validation, HttpStatus.UNAUTHORIZED);
         }
         if (checkIfAlreadyRegistered(signupForm.email())) {
             validation.put("isSignupSuccessful", "false");
             validation.put("reason", "already registered email");
-            return validation;
+            return new ResponseEntity<>(validation, HttpStatus.BAD_REQUEST);
         }
+        validation.put("isSignupSuccessful", "true");
+        validation.put("reason", "everything's valid, email sent for confirmation");
         UUID emailConfirmationToken = UUID.randomUUID();
         usersRepo.save(
                 new User(
@@ -77,7 +78,7 @@ public class SignupService {
                         false,
                         emailConfirmationToken));
         sendEmail(emailConfirmationToken, signupForm.email());
-        return validation;
+        return new ResponseEntity<>(validation, HttpStatus.CREATED);
     }
     public Map<String, String> checkToken(String token) {
         Map<String, String> response = new HashMap<>();

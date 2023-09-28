@@ -1,14 +1,11 @@
 package com.harmonicrainbow.userservice.model;
 
 import jakarta.persistence.*;
-import jdk.jfr.Timestamp;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.Time;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -39,5 +36,7 @@ public class User {
     private UUID emailConfirmationToken;
     @Column(nullable = false)
     private LocalDateTime registryDate;
+    @Column(nullable = false)
+    private boolean isLoggedIn;
 
 }
