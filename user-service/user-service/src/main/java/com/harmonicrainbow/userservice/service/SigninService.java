@@ -4,12 +4,13 @@ import com.harmonicrainbow.userservice.model.DTOS.SignupForm;
 import com.harmonicrainbow.userservice.repository.UsersRepo;
 import com.harmonicrainbow.userservice.service.utility.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 import com.harmonicrainbow.userservice.model.User;
 
-import java.net.http.HttpResponse;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -44,13 +45,37 @@ public class SigninService {
             response.put("reason", "already logged in");
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
+        UUID token = UUID.randomUUID();
+        if (!sendTokenToImageService(token)) {
+            response.put("reason", "service error, please try again later");
+            return new ResponseEntity<>(response, HttpStatus.SERVICE_UNAVAILABLE);
+        }
         user.setLoggedIn(true);
         usersRepo.save(user);
-        UUID token = UUID.randomUUID();
         response.put("isLoginSuccessful", "true");
         response.put("token", token.toString());
         response.put("reason", "valid credentials");
-        //TODO send token to services as well
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    private boolean sendTokenToImageService(UUID token) {
+        try {
+            String url = "http://192.168.1.65:8060/api/image/addtoken";
+            RestTemplate restTemplate = new RestTemplate();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+            Map<String, String> map = new HashMap<>();
+            map.put("serviceToken", "b6e08c93-6a25-4e97-bb68-5bd58ff5f4ce");
+            map.put("token", token.toString());
+
+            HttpEntity<Map<String, String>> request = new HttpEntity<>(new HashMap<>(map));
+            restTemplate.postForEntity(url, request, String.class);
+            return true;
+        }
+        catch (Exception e) {
+            return false;
+        }
+
     }
 }
