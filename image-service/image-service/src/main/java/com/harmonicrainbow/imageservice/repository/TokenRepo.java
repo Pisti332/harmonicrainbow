@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 @Repository
 public interface TokenRepo extends JpaRepository<Token, UUID> {
-
+    void deleteByToken(UUID token);
 }

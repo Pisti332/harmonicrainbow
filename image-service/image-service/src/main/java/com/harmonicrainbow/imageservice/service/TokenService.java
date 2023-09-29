@@ -1,7 +1,9 @@
 package com.harmonicrainbow.imageservice.service;
 
+import com.harmonicrainbow.imageservice.model.DTOs.DeleteTokenDTO;
 import com.harmonicrainbow.imageservice.model.Token;
 import com.harmonicrainbow.imageservice.repository.TokenRepo;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,5 +41,33 @@ public class TokenService {
         response.put("isAuthorizationAdded", "true");
         response.put("reason", "valid credentials");
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+    @Transactional
+    public ResponseEntity<Object> deleteToken(DeleteTokenDTO deleteTokenDTO) {
+        String serviceToken = deleteTokenDTO.serviceToken();
+        String token = deleteTokenDTO.token();
+        Map<String, String> response = new HashMap<>();
+
+        if (!serviceToken.equals(TokenService.SERVICE_TOKEN)) {
+            response.put("isDeleteSuccessful", "false");
+            response.put("reason", "invalid service token");
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+        boolean isDeleteSuccessful;
+        try {
+            tokenRepo.deleteByToken(UUID.fromString(token));
+            isDeleteSuccessful = true;
+        }
+        catch (Exception e) {
+            isDeleteSuccessful = false;
+        }
+        if (!isDeleteSuccessful) {
+            response.put("isDeleteSuccessful", "false");
+            response.put("reason", "token doesn't exist");
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+        response.put("isDeleteSuccessful", "true");
+        response.put("reason", "valid credentials");
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

@@ -12,4 +12,5 @@ public interface UsersRepo extends JpaRepository<User, UUID> {
     List<User> findByEmail(String email);
     List<User> findByEmailConfirmationToken(UUID token);
     User findByEmailAndPassword(String email, String password);
+    void deleteByEmailAndPassword(String email, String password);
 }
