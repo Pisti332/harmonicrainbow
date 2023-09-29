@@ -17,7 +17,7 @@ public class SignupService {
     private UsersRepo usersRepo;
     private EmailSenderService emailSenderService;
     private static final String EMAIL_ADDRESS = "harmonicrainbow7@gmail.com";
-    private static final String DOMAIN = "192.168.1.65";
+    private static final String DOMAIN = System.getenv("IPV4");
     private static final String PORT = "8060";
 
     private enum PasswordValidator {

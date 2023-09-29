@@ -60,7 +60,8 @@ public class SigninService {
 
     private boolean sendTokenToImageService(UUID token) {
         try {
-            String url = "http://192.168.1.65:8060/api/image/addtoken";
+            String currentIp = System.getenv("IPV4");
+            String url = "http://" + currentIp + ":8060/api/image/addtoken";
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
