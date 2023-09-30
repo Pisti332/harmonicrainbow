@@ -30,17 +30,13 @@ public class SignoutService {
             usersRepo.save(user);
 
             String currentIp = System.getenv("IPV4");
-            String url = "http://" + currentIp + ":8060/api/image/deletetoken";
+            String url = "http://" + currentIp + ":8060/api/image/deletetoken?" +
+                    "serviceToken=" + "b6e08c93-6a25-4e97-bb68-5bd58ff5f4ce&token=" + token;
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
 
-            Map<String, String> map = new HashMap<>();
-            map.put("serviceToken", "b6e08c93-6a25-4e97-bb68-5bd58ff5f4ce");
-            map.put("token", token);
-
-            HttpEntity<Map<String, String>> request = new HttpEntity<>(new HashMap<>(map));
-            restTemplate.postForEntity(url, request, String.class);
+            restTemplate.delete(url);
 
             response.put("isLogoutSuccessful", "true");
             response.put("reason", "valid credentials");

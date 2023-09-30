@@ -1,13 +1,9 @@
 package com.harmonicrainbow.imageservice.controller;
 
-import com.harmonicrainbow.imageservice.model.DTOs.DeleteTokenDTO;
 import com.harmonicrainbow.imageservice.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -24,9 +20,9 @@ public class TokenController {
     public ResponseEntity<Object> addToken(@RequestBody Map<String, String> serviceRequest) {
         return tokenService.storeToken(serviceRequest);
     }
-    @PostMapping("deletetoken")
-    public ResponseEntity<Object> deleteToken(@RequestBody DeleteTokenDTO deleteTokenDTO) {
-        return tokenService.deleteToken(deleteTokenDTO);
+    @DeleteMapping("deletetoken")
+    public ResponseEntity<Object> deleteToken(@RequestParam String token, @RequestParam String serviceToken) {
+        return tokenService.deleteToken(token, serviceToken);
     }
 
 }

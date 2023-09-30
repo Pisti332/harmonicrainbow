@@ -1,6 +1,5 @@
 package com.harmonicrainbow.imageservice.service;
 
-import com.harmonicrainbow.imageservice.model.DTOs.DeleteTokenDTO;
 import com.harmonicrainbow.imageservice.model.Token;
 import com.harmonicrainbow.imageservice.repository.TokenRepo;
 import jakarta.transaction.Transactional;
@@ -43,9 +42,7 @@ public class TokenService {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
     @Transactional
-    public ResponseEntity<Object> deleteToken(DeleteTokenDTO deleteTokenDTO) {
-        String serviceToken = deleteTokenDTO.serviceToken();
-        String token = deleteTokenDTO.token();
+    public ResponseEntity<Object> deleteToken(String token, String serviceToken) {
         Map<String, String> response = new HashMap<>();
 
         if (!serviceToken.equals(TokenService.SERVICE_TOKEN)) {
