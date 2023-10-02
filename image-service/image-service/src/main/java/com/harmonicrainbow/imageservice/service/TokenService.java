@@ -15,7 +15,7 @@ import java.util.UUID;
 
 @Service
 public class TokenService {
-    private static final String SERVICE_TOKEN = "b6e08c93-6a25-4e97-bb68-5bd58ff5f4ce";
+    public static final String SERVICE_TOKEN = "b6e08c93-6a25-4e97-bb68-5bd58ff5f4ce";
     private TokenRepo tokenRepo;
     @Autowired
     public TokenService(TokenRepo tokenRepo) {
