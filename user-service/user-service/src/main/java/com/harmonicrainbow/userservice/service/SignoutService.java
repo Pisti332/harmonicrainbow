@@ -29,8 +29,8 @@ public class SignoutService {
             user.setLoggedIn(false);
             usersRepo.save(user);
 
-            String currentIp = System.getenv("IPV4");
-            String url = "http://" + currentIp + ":8060/api/image/deletetoken?" +
+            String domain = System.getenv("IPV4");
+            String url = "http://" + domain + ":8060/api/image/deletetoken?" +
                     "serviceToken=" + "b6e08c93-6a25-4e97-bb68-5bd58ff5f4ce&token=" + token;
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
