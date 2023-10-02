@@ -36,7 +36,13 @@ public class SignoutService {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
 
-            restTemplate.delete(url);
+            HttpEntity<String> entity = new HttpEntity<>("body", headers);
+
+            ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.DELETE, entity, String.class);
+
+            String body = responseEntity.getBody();
+
+            System.out.println(body);
 
             response.put("isLogoutSuccessful", "true");
             response.put("reason", "valid credentials");
