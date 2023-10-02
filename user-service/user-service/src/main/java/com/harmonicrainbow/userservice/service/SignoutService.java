@@ -3,9 +3,11 @@ package com.harmonicrainbow.userservice.service;
 import com.harmonicrainbow.userservice.model.DTOS.SignoutForm;
 import com.harmonicrainbow.userservice.model.User;
 import com.harmonicrainbow.userservice.repository.UsersRepo;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
@@ -19,15 +21,13 @@ public class SignoutService {
     public SignoutService(UsersRepo usersRepo) {
         this.usersRepo = usersRepo;
     }
+    @Transactional
     public ResponseEntity<Object> signoutUser(SignoutForm signoutForm) {
         Map<String, String> response = new HashMap<>();
         try {
             String password = signoutForm.password();
             String email = signoutForm.email();
             String token = signoutForm.token();
-            User user = usersRepo.findByEmailAndPassword(email, String.valueOf(password.hashCode()));
-            user.setLoggedIn(false);
-            usersRepo.save(user);
 
             String domain = System.getenv("IPV4");
             String url = "http://" + domain + ":8060/api/image/deletetoken?" +
@@ -38,16 +38,25 @@ public class SignoutService {
 
             HttpEntity<String> entity = new HttpEntity<>("body", headers);
 
+            User user = usersRepo.findByEmailAndPassword(email, String.valueOf(password.hashCode()));
+            if (user == null) {
+                throw new Exception();
+            }
+
             ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.DELETE, entity, String.class);
 
-            String body = responseEntity.getBody();
-
-            System.out.println(body);
+            user.setLoggedIn(false);
+            usersRepo.save(user);
 
             response.put("isLogoutSuccessful", "true");
             response.put("reason", "valid credentials");
 
             return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+        catch (HttpClientErrorException e) {
+            response.put("isLogoutSuccessful", "false");
+            response.put("reason", e.toString());
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
         catch (Exception e) {
             response.put("isLogoutSuccessful", "false");

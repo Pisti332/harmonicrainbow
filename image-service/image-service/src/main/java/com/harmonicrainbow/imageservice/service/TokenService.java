@@ -41,28 +41,25 @@ public class TokenService {
         response.put("reason", "valid credentials");
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
+
     @Transactional
     public ResponseEntity<Object> deleteToken(String token, String serviceToken) {
         Map<String, String> response = new HashMap<>();
-
+        UUID tokenAsUUID = UUID.fromString(token);
         if (!serviceToken.equals(TokenService.SERVICE_TOKEN)) {
             response.put("isDeleteSuccessful", "false");
             response.put("reason", "invalid service token");
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
-        boolean isDeleteSuccessful;
-        try {
-            tokenRepo.deleteByToken(UUID.fromString(token));
-            isDeleteSuccessful = true;
-        }
-        catch (Exception e) {
-            isDeleteSuccessful = false;
-        }
-        if (!isDeleteSuccessful) {
+
+        Token tokenFromDb = tokenRepo.findByToken(tokenAsUUID);
+
+        if (tokenFromDb == null) {
             response.put("isDeleteSuccessful", "false");
             response.put("reason", "token doesn't exist");
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
+        tokenRepo.deleteByToken(tokenAsUUID);
         response.put("isDeleteSuccessful", "true");
         response.put("reason", "valid credentials");
         return new ResponseEntity<>(response, HttpStatus.OK);
