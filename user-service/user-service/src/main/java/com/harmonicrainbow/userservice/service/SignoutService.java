@@ -30,7 +30,7 @@ public class SignoutService {
             String token = signoutForm.token();
 
             String domain = System.getenv("IPV4");
-            String url = "http://" + domain + ":8060/api/image/deletetoken?" +
+            String url = "http://" + domain + ":8060/api/image/token?" +
                     "serviceToken=" + "b6e08c93-6a25-4e97-bb68-5bd58ff5f4ce&token=" + token;
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();

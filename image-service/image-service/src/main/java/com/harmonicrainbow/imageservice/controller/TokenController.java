@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("api/image")
+@RequestMapping("api/image/token")
 // TODO change endpoint names to be restful
 public class TokenController {
     private TokenService tokenService;
@@ -17,11 +17,11 @@ public class TokenController {
     public TokenController(TokenService tokenService) {
         this.tokenService = tokenService;
     }
-    @PostMapping("addtoken")
+    @PostMapping
     public ResponseEntity<Object> addToken(@RequestBody Map<String, String> serviceRequest) {
         return tokenService.storeToken(serviceRequest);
     }
-    @DeleteMapping("deletetoken")
+    @DeleteMapping
     public ResponseEntity<Object> deleteToken(@RequestParam String token, @RequestParam String serviceToken) {
         return tokenService.deleteToken(token, serviceToken);
     }
