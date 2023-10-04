@@ -9,7 +9,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("api/image/token")
-// TODO change endpoint names to be restful
 public class TokenController {
     private TokenService tokenService;
 

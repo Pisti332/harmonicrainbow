@@ -1,52 +1,60 @@
 package com.harmonicrainbow.imageservice.service;
 
-import com.harmonicrainbow.imageservice.model.DTOs.PostImageDTO;
 import com.harmonicrainbow.imageservice.model.Image;
-import com.harmonicrainbow.imageservice.model.ImageFormat;
 import com.harmonicrainbow.imageservice.repository.ImageRepo;
+import com.harmonicrainbow.imageservice.service.utility.ImageNameConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
 @Service
 public class ImageService {
+    private static final String UPLOAD_DIRECTORY = "image-service\\image-service\\src\\main\\resources\\images\\";
     private ImageRepo imageRepo;
+    private ImageNameConverter imageNameConverter;
 
     @Autowired
-    public ImageService(ImageRepo imageRepo) {
+    public ImageService(ImageRepo imageRepo, ImageNameConverter imageNameConverter) {
         this.imageRepo = imageRepo;
+        this.imageNameConverter = imageNameConverter;
     }
-
-    public ResponseEntity<Object> postImage(PostImageDTO postImageDTO, String token) {
+    public ResponseEntity<Object> uploadImage(MultipartFile file, String email, String token) throws IOException {
         Map<String, String> response = new HashMap<>();
-        if (!token.equals(TokenService.SERVICE_TOKEN)) {
+        if (!TokenService.SERVICE_TOKEN.equals(token)) {
             response.put("isUploadSuccessful", "false");
             response.put("reason", "invalid service token");
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
-        String imageData = postImageDTO.imageData();
-        String imageName = postImageDTO.imageName();
-        String imageFormat = postImageDTO.imageFormat();
-        String email = postImageDTO.email();
         // TODO make 48px small image
+
+        String imageName = file.getOriginalFilename();
+        Map<String, String> imageMetadata = imageNameConverter.convertImageNameToNameAndFormat(imageName);
+
         Image image = Image
                 .builder()
-                .name(imageName)
-                .format(imageFormat)
+                .name(imageMetadata.get("name"))
+                .format(imageMetadata.get("format"))
                 .email(email)
                 .image48Px("test")
                 .upload_time(LocalDateTime.now())
                 .build();
 
         imageRepo.save(image);
-        response.put("isUploadSuccessful", "true");
+
+        Path fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, file.getOriginalFilename());
+        Files.write(fileNameAndPath, file.getBytes());
+        response.put("isSuccessful", "true");
         response.put("reason", "valid credentials");
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

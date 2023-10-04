@@ -2,12 +2,18 @@ package com.harmonicrainbow.imageservice.controller;
 
 
 import com.harmonicrainbow.imageservice.model.DTOs.PostImageDTO;
-import com.harmonicrainbow.imageservice.model.ImageFormat;
 import com.harmonicrainbow.imageservice.service.ImageService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @RestController
 @RequestMapping("api/image")
@@ -18,11 +24,10 @@ public class ImageController {
     public ImageController(ImageService imageService) {
         this.imageService = imageService;
     }
-
     @PostMapping
-    public ResponseEntity<Object> postImage(@RequestBody PostImageDTO postImageDTO,
-                                            HttpServletRequest request) {
+    public ResponseEntity<Object> uploadImage(@RequestParam("image") MultipartFile file, @RequestParam("email") String email,
+                                              HttpServletRequest request) throws IOException {
         String token = request.getHeader("token");
-        return imageService.postImage(postImageDTO, token);
+        return imageService.uploadImage(file, email, token);
     }
 }
