@@ -21,7 +21,7 @@ public class Image {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(unique = true, nullable = false)
     private UUID id;
-    @Column(nullable = false)
+    @Column(nullable = false, length = 4096)
     private String image48Px;
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime upload_time;

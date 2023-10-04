@@ -30,4 +30,5 @@ public class ImageController {
         String token = request.getHeader("token");
         return imageService.uploadImage(file, email, token);
     }
+
 }
