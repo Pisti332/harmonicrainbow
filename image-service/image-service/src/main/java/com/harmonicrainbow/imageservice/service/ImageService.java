@@ -22,9 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ImageService {
@@ -55,8 +53,6 @@ public class ImageService {
 
         String smallerImage = Base64.getEncoder().encodeToString(baos.toByteArray());
 
-        // TODO make 48px small image
-
         String imageName = file.getOriginalFilename();
         Map<String, String> imageMetadata = imageNameConverter.convertImageNameToNameAndFormat(imageName);
 
@@ -77,5 +73,13 @@ public class ImageService {
         response.put("isSuccessful", "true");
         response.put("reason", "valid credentials");
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    public ResponseEntity<Object> getImagesByEmail(String email) {
+//        Map<String, String> response = new HashMap<>();
+        System.out.println(email);
+        Set<Image> images = imageRepo.getImagesByEmail(email);
+        System.out.println(images.toString());
+        return new ResponseEntity<>(images, HttpStatus.OK);
     }
 }
