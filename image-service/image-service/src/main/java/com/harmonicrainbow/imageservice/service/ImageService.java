@@ -75,8 +75,13 @@ public class ImageService {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    public ResponseEntity<Object> getImagesByEmail(String email) {
-//        Map<String, String> response = new HashMap<>();
+    public ResponseEntity<Object> getImagesByEmail(String email, String token) {
+        Map<String, String> response = new HashMap<>();
+        if (!TokenService.SERVICE_TOKEN.equals(token)) {
+            response.put("isUploadSuccessful", "false");
+            response.put("reason", "invalid service token");
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
         System.out.println(email);
         Set<Image> images = imageRepo.getImagesByEmail(email);
         System.out.println(images.toString());

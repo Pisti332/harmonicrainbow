@@ -2,6 +2,7 @@ package com.harmonicrainbow.imageservice.controller;
 
 
 import com.harmonicrainbow.imageservice.model.DTOs.PostImageDTO;
+import com.harmonicrainbow.imageservice.model.Image;
 import com.harmonicrainbow.imageservice.service.ImageService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,8 +36,10 @@ public class ImageController {
         return imageService.uploadImage(file, email, token);
     }
     @GetMapping("{email}")
-    public ResponseEntity<Object> getImagesByEmail(@PathVariable String email) {
-        return imageService.getImagesByEmail(email);
+    public ResponseEntity<Object> getImagesByEmail(@PathVariable String email, HttpServletRequest request) {
+        String token = request.getHeader("token");
+        return imageService.getImagesByEmail(email, token);
     }
+
 
 }
