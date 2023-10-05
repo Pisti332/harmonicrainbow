@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -39,6 +40,11 @@ public class ImageController {
     public ResponseEntity<Object> getImagesByEmail(@PathVariable String email, HttpServletRequest request) {
         String token = request.getHeader("token");
         return imageService.getImagesByEmail(email, token);
+    }
+    @GetMapping(produces = MediaType.IMAGE_JPEG_VALUE)
+    public ResponseEntity<Object> getImageByEmailAndName(@RequestParam String email, @RequestParam String name, HttpServletRequest request) {
+        String token = request.getHeader("token");
+        return imageService.getImageByEmailAndName(email, name, token);
     }
 
 

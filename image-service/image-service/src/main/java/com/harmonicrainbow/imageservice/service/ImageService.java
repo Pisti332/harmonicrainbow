@@ -3,19 +3,19 @@ package com.harmonicrainbow.imageservice.service;
 import com.harmonicrainbow.imageservice.model.Image;
 import com.harmonicrainbow.imageservice.repository.ImageRepo;
 import com.harmonicrainbow.imageservice.service.utility.ImageNameConverter;
+import com.harmonicrainbow.imageservice.service.utility.ImageReader;
 import com.harmonicrainbow.imageservice.service.utility.ImageResizer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import zipkin2.Call;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.awt.image.WritableRaster;
-import java.awt.image.DataBuffer;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -26,16 +26,18 @@ import java.util.*;
 
 @Service
 public class ImageService {
-    private static final String UPLOAD_DIRECTORY = "image-service\\image-service\\src\\main\\resources\\images\\";
+    public static final String UPLOAD_DIRECTORY = "image-service\\image-service\\src\\main\\resources\\images\\";
     private ImageRepo imageRepo;
     private ImageNameConverter imageNameConverter;
     private ImageResizer imageResizer;
+    private ImageReader imageReader;
 
     @Autowired
-    public ImageService(ImageRepo imageRepo, ImageNameConverter imageNameConverter, ImageResizer imageResizer) {
+    public ImageService(ImageRepo imageRepo, ImageNameConverter imageNameConverter, ImageResizer imageResizer, ImageReader imageReader) {
         this.imageRepo = imageRepo;
         this.imageNameConverter = imageNameConverter;
         this.imageResizer = imageResizer;
+        this.imageReader = imageReader;
     }
 
     public ResponseEntity<Object> uploadImage(MultipartFile file, String email, String token) throws IOException {
@@ -86,5 +88,39 @@ public class ImageService {
         Set<Image> images = imageRepo.getImagesByEmail(email);
         System.out.println(images.toString());
         return new ResponseEntity<>(images, HttpStatus.OK);
+    }
+
+    public ResponseEntity<Object> getImageByEmailAndName(String email, String name, String token) {
+        Map<String, String> response = new HashMap<>();
+        if (!TokenService.SERVICE_TOKEN.equals(token)) {
+            response.put("isSuccessful", "false");
+            response.put("reason", "invalid service token");
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+        try {
+            Image image = imageRepo.getImageByEmailAndName(email, name);
+            System.out.println(image);
+            if (image == null) {
+                response.put("isSuccessful", "false");
+                response.put("reason", "no such image");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            }
+            BufferedImage bufferedImage = imageReader.readImage(name, image.getFormat());
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(bufferedImage, image.getFormat(), baos);
+            byte[] bytes = baos.toByteArray();
+            ByteArrayResource inputStream = new ByteArrayResource(bytes);
+//            response.put("isUploadSuccessful", "false");
+//            response.put("reason", "no such image");
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .contentLength(inputStream.contentLength())
+                    .body(inputStream);
+
+        } catch (Exception e) {
+            response.put("isUploadSuccessful", "false");
+            response.put("reason", "there was an error");
+            return new ResponseEntity<>("response", HttpStatus.BAD_REQUEST);
+        }
     }
 }
