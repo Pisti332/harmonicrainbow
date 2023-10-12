@@ -64,4 +64,7 @@ public class TokenService {
         response.put("reason", "valid credentials");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+    public boolean checkIfTokenExists(UUID token) {
+        return tokenRepo.existsTokenByToken(token);
+    }
 }

@@ -31,21 +31,23 @@ public class ImageService {
     private ImageNameConverter imageNameConverter;
     private ImageResizer imageResizer;
     private ImageReader imageReader;
+    private TokenService tokenService;
 
     @Autowired
-    public ImageService(ImageRepo imageRepo, ImageNameConverter imageNameConverter, ImageResizer imageResizer, ImageReader imageReader) {
+    public ImageService(ImageRepo imageRepo, ImageNameConverter imageNameConverter, ImageResizer imageResizer, ImageReader imageReader, TokenService tokenService) {
         this.imageRepo = imageRepo;
         this.imageNameConverter = imageNameConverter;
         this.imageResizer = imageResizer;
         this.imageReader = imageReader;
+        this.tokenService = tokenService;
     }
 
     public ResponseEntity<Object> uploadImage(MultipartFile file, String email, String token) throws IOException {
         Map<String, String> response = new HashMap<>();
-        if (!TokenService.SERVICE_TOKEN.equals(token)) {
+        if (!tokenService.checkIfTokenExists(UUID.fromString(token))) {
             response.put("isUploadSuccessful", "false");
-            response.put("reason", "invalid service token");
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            response.put("reason", "invalid token");
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         }
         BufferedImage image = ImageIO.read(file.getInputStream());
         BufferedImage image1 = imageResizer.resize(image, 32);

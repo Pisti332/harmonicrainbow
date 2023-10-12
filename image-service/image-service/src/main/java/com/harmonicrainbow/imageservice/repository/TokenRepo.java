@@ -9,4 +9,5 @@ import java.util.UUID;
 public interface TokenRepo extends JpaRepository<Token, UUID> {
     void deleteByToken(UUID token);
     Token findByToken(UUID uuid);
+    boolean existsTokenByToken(UUID token);
 }
