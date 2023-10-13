@@ -44,7 +44,16 @@ public class ImageService {
 
     public ResponseEntity<Object> uploadImage(MultipartFile file, String email, String token) throws IOException {
         Map<String, String> response = new HashMap<>();
-        if (!tokenService.checkIfTokenExists(UUID.fromString(token))) {
+        boolean isTokenValid;
+        try {
+            isTokenValid = tokenService.checkIfTokenExists(UUID.fromString(token));
+        }
+        catch (NumberFormatException e) {
+            response.put("isUploadSuccessful", "false");
+            response.put("reason", "invalid token");
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+        if (isTokenValid) {
             response.put("isUploadSuccessful", "false");
             response.put("reason", "invalid token");
             return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
@@ -81,9 +90,18 @@ public class ImageService {
 
     public ResponseEntity<Object> getImagesByEmail(String email, String token) {
         Map<String, String> response = new HashMap<>();
-        if (!TokenService.SERVICE_TOKEN.equals(token)) {
-            response.put("isUploadSuccessful", "false");
-            response.put("reason", "invalid service token");
+        if (!tokenService.checkIfTokenExists(UUID.fromString(token))) {
+            response.put("isDownloadSuccessful", "false");
+            response.put("reason", "invalid token");
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+        }
+        boolean isTokenValid;
+        try {
+            isTokenValid = tokenService.checkIfTokenExists(UUID.fromString(token));
+        }
+        catch (NumberFormatException e) {
+            response.put("isDownloadSuccessful", "false");
+            response.put("reason", "invalid token format");
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
         System.out.println(email);
@@ -94,10 +112,19 @@ public class ImageService {
 
     public ResponseEntity<Object> getImageByEmailAndName(String email, String name, String token) {
         Map<String, String> response = new HashMap<>();
-        if (!TokenService.SERVICE_TOKEN.equals(token)) {
-            response.put("isSuccessful", "false");
-            response.put("reason", "invalid service token");
+        boolean isTokenValid;
+        try {
+            isTokenValid = tokenService.checkIfTokenExists(UUID.fromString(token));
+        }
+        catch (NumberFormatException e) {
+            response.put("isDownloadSuccessful", "false");
+            response.put("reason", "invalid token format");
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+        if (!isTokenValid) {
+            response.put("isDownloadSuccessful", "false");
+            response.put("reason", "invalid token");
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         }
         try {
             Image image = imageRepo.getImageByEmailAndName(email, name);
