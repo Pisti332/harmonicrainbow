@@ -1,0 +1,51 @@
+version: '3'
+networks:
+  my-network:
+services:
+  api-gateway:
+    networks:
+      - my-network
+    build:
+      context: ./api-gateway/api-gateway
+    ports:
+      - "8060:8060"
+  config-server:
+    networks:
+      - my-network
+    build:
+      context: ./config-server/config-server
+    ports:
+      - "8088:8088"
+  image-service:
+    networks:
+      - my-network
+    build:
+      context: ./image-service/image-service
+    ports:
+      - "8082:8082"
+    environment:
+      DBPW: pisti333
+  service-registry:
+    networks:
+      - my-network
+    build:
+      context: ./service-registry/service-registry
+    ports:
+      - "8761:8761"
+  user-service:
+    networks:
+      - my-network
+    build:
+      context: ./user-service/user-service
+    ports:
+      - "8081:8081"
+    environment:
+      DBPW: pisti333
+      MAILPW: evcyflwepibrspny
+      IPV4: config-server
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_DB: harmonicrainbow
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: pisti333
