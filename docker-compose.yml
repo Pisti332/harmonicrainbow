@@ -1,51 +1,44 @@
-version: '3'
-networks:
-  my-network:
+version: '3.8'
+
 services:
-  api-gateway:
-    networks:
-      - my-network
+  app:
+    image: 'docker-spring-boot-postgres:latest'
     build:
-      context: ./api-gateway/api-gateway
+      context: ./user-service
+    container_name: app
+    volumes:
+      - images:/home/images
+      - users:/home/users
+      - tokens:/home/tokens
     ports:
-      - "8060:8060"
-  config-server:
-    networks:
-      - my-network
-    build:
-      context: ./config-server/config-server
-    ports:
-      - "8088:8088"
-  image-service:
-    networks:
-      - my-network
-    build:
-      context: ./image-service/image-service
-    ports:
-      - "8082:8082"
+      - "8080:8080"
+    expose:
+      - "8080"
+    depends_on:
+      - db
     environment:
-      DBPW: pisti333
-  service-registry:
-    networks:
-      - my-network
-    build:
-      context: ./service-registry/service-registry
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/compose-postgres
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=pisti333
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.PostgreSQLDialect
+      - UPLOAD_DIRECTORY=/home/images
+      - DBPW=pisti333
+      - MAILPW=evcyflwepibrspny
+      - IPV4=192.168.0.15
+      - MAX_SIZE=10MB
+
+  db:
+    image: 'postgres:13.1-alpine'
+    container_name: db
     ports:
-      - "8761:8761"
-  user-service:
-    networks:
-      - my-network
-    build:
-      context: ./user-service/user-service
-    ports:
-      - "8081:8081"
+      - "5432:5432"
     environment:
-      DBPW: pisti333
-      MAILPW: evcyflwepibrspny
-      IPV4: config-server
-  postgres:
-    image: postgres
-    environment:
-      POSTGRES_DB: harmonicrainbow
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: pisti333
+      - POSTGRES_DB=compose-postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=pisti333
+
+volumes:
+  images:
+  users:
+  tokens:

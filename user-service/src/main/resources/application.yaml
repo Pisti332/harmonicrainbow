@@ -22,3 +22,8 @@ spring:
           auth: true
           starttls:
             enable: true
+
+  servlet:
+    multipart:
+      max-file-size: ${MAX_SIZE}
+      max-request-size: ${MAX_SIZE}

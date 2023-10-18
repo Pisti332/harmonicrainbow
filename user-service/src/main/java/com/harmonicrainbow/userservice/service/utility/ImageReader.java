@@ -10,8 +10,9 @@ import java.io.IOException;
 
 @Component
 public class ImageReader {
+    private final String UPLOAD_DIRECTORY = System.getenv("UPLOAD_DIRECTORY");
     public BufferedImage readImage(String name, String format) {
-        String path = ImageService.UPLOAD_DIRECTORY + "/" + name + "." + format;
+        String path = UPLOAD_DIRECTORY + "/" + name + "." + format;
         try {
             return ImageIO.read(new File(path));
         }

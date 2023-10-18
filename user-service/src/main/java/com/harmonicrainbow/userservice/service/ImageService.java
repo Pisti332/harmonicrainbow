@@ -24,12 +24,12 @@ import java.util.*;
 
 @Service
 public class ImageService {
-    public static final String UPLOAD_DIRECTORY = "user-service\\src\\main\\resources\\images\\";
     private ImageRepo imageRepo;
     private ImageNameConverter imageNameConverter;
     private ImageResizer imageResizer;
     private ImageReader imageReader;
     private TokenService tokenService;
+    private final String UPLOAD_DIRECTORY = System.getenv("UPLOAD_DIRECTORY");
 
     @Autowired
     public ImageService(ImageRepo imageRepo, ImageNameConverter imageNameConverter, ImageResizer imageResizer, ImageReader imageReader, TokenService tokenService) {
@@ -79,8 +79,8 @@ public class ImageService {
         imageRepo.save(imageEntity);
 
         Path fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, file.getOriginalFilename());
+        System.out.println(fileNameAndPath);
         Files.write(fileNameAndPath, file.getBytes());
-//        Files.write(fileNameAndPath, baos.toByteArray());
         response.put("isSuccessful", "true");
         response.put("reason", "valid credentials");
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -110,40 +110,50 @@ public class ImageService {
         try {
             isTokenValid = tokenService.checkIfTokenExists(UUID.fromString(token));
         }
-        catch (NumberFormatException e) {
+        catch (Exception e) {
             response.put("isDownloadSuccessful", "false");
             response.put("reason", "invalid token format");
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .contentLength(response.size())
+                    .body(response);
         }
         if (!isTokenValid) {
             response.put("isDownloadSuccessful", "false");
             response.put("reason", "invalid token");
-            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .contentLength(response.size())
+                    .body(response);
+
         }
         try {
             Image image = imageRepo.getImageByEmailAndName(email, name);
-            System.out.println(image);
             if (image == null) {
-                response.put("isSuccessful", "false");
+                response.put("isDownloadSuccessful", "false");
                 response.put("reason", "no such image");
-                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+                return ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST)
+                        .contentLength(response.size())
+                        .body(response);
             }
             BufferedImage bufferedImage = imageReader.readImage(name, image.getFormat());
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ImageIO.write(bufferedImage, image.getFormat(), baos);
             byte[] bytes = baos.toByteArray();
             ByteArrayResource inputStream = new ByteArrayResource(bytes);
-//            response.put("isUploadSuccessful", "false");
-//            response.put("reason", "no such image");
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .contentLength(inputStream.contentLength())
                     .body(inputStream);
 
         } catch (Exception e) {
-            response.put("isUploadSuccessful", "false");
-            response.put("reason", "there was an error");
-            return new ResponseEntity<>("response", HttpStatus.BAD_REQUEST);
+            response.put("isDownloadSuccessful", "false");
+            response.put("reason", "there was an error downloading the image");
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .contentLength(response.size())
+                    .body(response);
         }
     }
 }
