@@ -106,7 +106,7 @@ This section should list any major frameworks/libraries used to bootstrap the pr
 
 ### Installation
 
-* clone the repository with the ```git@github.com:Pisti332/harmonicrainbow.git``` command
+* clone the repository with the ```git clone git@github.com:Pisti332/harmonicrainbow.git``` command
 * start docker desktop app
 * create a .jar file with maven
 * give the ```docker compose up``` command in the root folder
