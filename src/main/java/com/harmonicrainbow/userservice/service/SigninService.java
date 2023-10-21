@@ -8,9 +8,11 @@ import com.harmonicrainbow.userservice.service.utility.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import com.harmonicrainbow.userservice.model.User;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -29,7 +31,6 @@ public class SigninService {
     public ResponseEntity<Object> signinUser(SignupForm signupForm) {
         Map<String, String> response = new HashMap<>();
         response.put("isLoginSuccessful", "false");
-        response.put("token", "");
         if (!Validator.validateEmail(signupForm.email())) {
             response.put("reason", "wrong email format");
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
@@ -55,8 +56,9 @@ public class SigninService {
         user.setLoggedIn(true);
         usersRepo.save(user);
         response.put("isLoginSuccessful", "true");
-        response.put("token", token.toString());
         response.put("reason", "valid credentials");
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        MultiValueMap<String, String> headers = new HttpHeaders();
+        headers.put("token", Collections.singletonList(token.toString()));
+        return new ResponseEntity<>(response, headers, HttpStatus.OK);
     }
 }
