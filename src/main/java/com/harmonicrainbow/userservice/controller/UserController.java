@@ -2,15 +2,13 @@ package com.harmonicrainbow.userservice.controller;
 
 import com.harmonicrainbow.userservice.model.DTOS.SignoutForm;
 import com.harmonicrainbow.userservice.model.DTOS.SignupForm;
-import com.harmonicrainbow.userservice.service.SigninService;
-import com.harmonicrainbow.userservice.service.SignoutService;
-import com.harmonicrainbow.userservice.service.SignupService;
+import com.harmonicrainbow.userservice.service.user.SigninService;
+import com.harmonicrainbow.userservice.service.user.SignoutService;
+import com.harmonicrainbow.userservice.service.user.SignupService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("api/user")

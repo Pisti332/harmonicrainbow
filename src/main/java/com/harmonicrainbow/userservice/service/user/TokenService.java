@@ -1,4 +1,4 @@
-package com.harmonicrainbow.userservice.service;
+package com.harmonicrainbow.userservice.service.user;
 
 import com.harmonicrainbow.userservice.model.Token;
 import com.harmonicrainbow.userservice.repository.TokenRepo;

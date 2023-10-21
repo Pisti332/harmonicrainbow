@@ -1,4 +1,4 @@
-package com.harmonicrainbow.userservice.service;
+package com.harmonicrainbow.userservice.service.user;
 
 import com.harmonicrainbow.userservice.model.DTOS.SignupForm;
 import com.harmonicrainbow.userservice.model.User;
@@ -6,7 +6,6 @@ import com.harmonicrainbow.userservice.repository.UsersRepo;
 import com.harmonicrainbow.userservice.service.utility.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 

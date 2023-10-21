@@ -2,6 +2,7 @@ package com.harmonicrainbow.userservice.service;
 
 import com.harmonicrainbow.userservice.model.Image;
 import com.harmonicrainbow.userservice.repository.ImageRepo;
+import com.harmonicrainbow.userservice.service.user.TokenService;
 import com.harmonicrainbow.userservice.service.utility.ImageNameConverter;
 import com.harmonicrainbow.userservice.service.utility.ImageReader;
 import com.harmonicrainbow.userservice.service.utility.ImageResizer;

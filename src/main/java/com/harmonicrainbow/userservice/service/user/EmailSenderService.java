@@ -1,4 +1,4 @@
-package com.harmonicrainbow.userservice.service;
+package com.harmonicrainbow.userservice.service.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;

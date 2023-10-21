@@ -1,15 +1,12 @@
-package com.harmonicrainbow.userservice.service;
+package com.harmonicrainbow.userservice.service.user;
 
 import com.harmonicrainbow.userservice.model.DTOS.SignupForm;
-import com.harmonicrainbow.userservice.model.Token;
-import com.harmonicrainbow.userservice.repository.TokenRepo;
 import com.harmonicrainbow.userservice.repository.UsersRepo;
 import com.harmonicrainbow.userservice.service.utility.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
 import com.harmonicrainbow.userservice.model.User;
 
 import java.util.Collections;
