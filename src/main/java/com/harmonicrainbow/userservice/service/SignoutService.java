@@ -3,6 +3,7 @@ package com.harmonicrainbow.userservice.service;
 import com.harmonicrainbow.userservice.model.DTOS.SignoutForm;
 import com.harmonicrainbow.userservice.model.User;
 import com.harmonicrainbow.userservice.repository.UsersRepo;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -24,11 +25,11 @@ public class SignoutService {
     }
 
     @Transactional
-    public ResponseEntity<Object> signoutUser(SignoutForm signoutForm) {
+    public ResponseEntity<Object> signoutUser(SignoutForm signoutForm, HttpServletRequest request) {
+        UUID token = UUID.fromString(request.getHeader("token"));
         Map<String, String> response = new HashMap<>();
         String password = signoutForm.password();
         String email = signoutForm.email();
-        UUID token = signoutForm.token();
 
         User user = usersRepo.findByEmailAndPassword(email, String.valueOf(password.hashCode()));
 

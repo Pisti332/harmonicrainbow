@@ -5,6 +5,7 @@ import com.harmonicrainbow.userservice.model.DTOS.SignupForm;
 import com.harmonicrainbow.userservice.service.SigninService;
 import com.harmonicrainbow.userservice.service.SignoutService;
 import com.harmonicrainbow.userservice.service.SignupService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +34,7 @@ public class UserController {
         return signinService.signinUser(signupForm);
     }
     @PostMapping("signout")
-    public ResponseEntity<Object> signoutUser(@RequestBody SignoutForm signoutForm) {
-        return signoutService.signoutUser(signoutForm);
+    public ResponseEntity<Object> signoutUser(@RequestBody SignoutForm signoutForm, HttpServletRequest request) {
+        return signoutService.signoutUser(signoutForm, request);
     }
 }
