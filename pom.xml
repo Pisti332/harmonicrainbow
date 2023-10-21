@@ -8,10 +8,10 @@
 		<version>3.1.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.harmonicrainbow</groupId>
-	<artifactId>user-service</artifactId>
+	<groupId>com.pisti</groupId>
+	<artifactId>harmonicrainbow</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>user-service</name>
+	<name>harmonicrainbow</name>
 	<description>image developer software</description>
 	<properties>
 		<java.version>17</java.version>

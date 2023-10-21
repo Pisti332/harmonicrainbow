@@ -1,0 +1,10 @@
+TO FIX:
+- fix get image by email and name to not throw 500 when somethings wrong
+- change login to hand the token in the headers instead of body
+- change token to spring jwt by spring sec
+- change folder structure so no user-service folder
+
+TO ADD:
+- spring sec
+- brightness analytics
+- color composition

@@ -4,7 +4,7 @@ services:
   app:
     image: 'docker-spring-boot-postgres:latest'
     build:
-      context: ./user-service
+      context: .
     container_name: app
     volumes:
       - images:/home/images
