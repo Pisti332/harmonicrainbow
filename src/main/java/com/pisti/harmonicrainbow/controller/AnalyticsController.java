@@ -19,10 +19,8 @@ public class AnalyticsController {
         this.analyticsService = analyticsService;
     }
     @GetMapping("brightness")
-    public ResponseEntity<Object> getImageBrightness(@RequestParam String email, @RequestParam String name,
-                                                     HttpServletRequest request) {
-        String token = request.getHeader("token");
-        return analyticsService.getBrightness(email, name, token);
+    public ResponseEntity<Object> getImageBrightness(@RequestParam String email, @RequestParam String name) {
+        return analyticsService.getBrightness(email, name);
     }
 
 }

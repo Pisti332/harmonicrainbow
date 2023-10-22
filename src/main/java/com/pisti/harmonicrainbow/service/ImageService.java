@@ -29,34 +29,18 @@ public class ImageService {
     private ImageNameConverter imageNameConverter;
     private ImageResizer imageResizer;
     private ImageReader imageReader;
-    private TokenService tokenService;
     private final String UPLOAD_DIRECTORY = System.getenv("UPLOAD_DIRECTORY");
 
     @Autowired
-    public ImageService(ImageRepo imageRepo, ImageNameConverter imageNameConverter, ImageResizer imageResizer, ImageReader imageReader, TokenService tokenService) {
+    public ImageService(ImageRepo imageRepo, ImageNameConverter imageNameConverter, ImageResizer imageResizer, ImageReader imageReader) {
         this.imageRepo = imageRepo;
         this.imageNameConverter = imageNameConverter;
         this.imageResizer = imageResizer;
         this.imageReader = imageReader;
-        this.tokenService = tokenService;
     }
 
-    public ResponseEntity<Object> uploadImage(MultipartFile file, String email, String token) throws IOException {
+    public ResponseEntity<Object> uploadImage(MultipartFile file, String email) throws IOException {
         Map<String, String> response = new HashMap<>();
-        boolean isTokenValid;
-        try {
-            isTokenValid = tokenService.checkIfTokenExists(UUID.fromString(token));
-        }
-        catch (Exception e) {
-            response.put("isUploadSuccessful", "false");
-            response.put("reason", "invalid token");
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-        }
-        if (!isTokenValid) {
-            response.put("isUploadSuccessful", "false");
-            response.put("reason", "invalid token");
-            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
-        }
         BufferedImage image = ImageIO.read(file.getInputStream());
         BufferedImage image1 = imageResizer.resize(image, 32);
 
@@ -87,47 +71,13 @@ public class ImageService {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    public ResponseEntity<Object> getImagesByEmail(String email, String token) {
-        Map<String, String> response = new HashMap<>();
-        try {
-            if (!tokenService.checkIfTokenExists(UUID.fromString(token))) {
-                response.put("isDownloadSuccessful", "false");
-                response.put("reason", "invalid token");
-                return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
-            }
-        }
-        catch (Exception e) {
-            response.put("isDownloadSuccessful", "false");
-            response.put("reason", "invalid token format");
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<Object> getImagesByEmail(String email) {
         Set<Image> images = imageRepo.getImagesByEmail(email);
         return new ResponseEntity<>(images, HttpStatus.OK);
     }
 
-    public ResponseEntity<Object> getImageByEmailAndName(String email, String name, String token) {
+    public ResponseEntity<Object> getImageByEmailAndName(String email, String name) {
         Map<String, String> response = new HashMap<>();
-        boolean isTokenValid;
-        try {
-            isTokenValid = tokenService.checkIfTokenExists(UUID.fromString(token));
-        }
-        catch (Exception e) {
-            response.put("isDownloadSuccessful", "false");
-            response.put("reason", "invalid token format");
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .contentLength(response.size())
-                    .body(response);
-        }
-        if (!isTokenValid) {
-            response.put("isDownloadSuccessful", "false");
-            response.put("reason", "invalid token");
-            return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .contentLength(response.size())
-                    .body(response);
-
-        }
         try {
             Image image = imageRepo.getImageByEmailAndName(email, name);
             if (image == null) {

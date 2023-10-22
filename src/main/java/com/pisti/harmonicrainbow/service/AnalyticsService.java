@@ -20,8 +20,8 @@ public class AnalyticsService {
         this.imageService = imageService;
     }
 
-    public ResponseEntity<Object> getBrightness(String email, String name, String token) {
-        ResponseEntity<Object> imageResponse = imageService.getImageByEmailAndName(email, name, token);
+    public ResponseEntity<Object> getBrightness(String email, String name) {
+        ResponseEntity<Object> imageResponse = imageService.getImageByEmailAndName(email, name);
         if (imageResponse.getStatusCode() == HttpStatus.OK) {
             try {
                 ByteArrayResource image = (ByteArrayResource) imageResponse.getBody();

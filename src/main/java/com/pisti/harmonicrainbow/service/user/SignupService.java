@@ -7,6 +7,7 @@ import com.pisti.harmonicrainbow.service.utility.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -15,6 +16,7 @@ import java.util.*;
 public class SignupService {
     private UsersRepo usersRepo;
     private EmailSenderService emailSenderService;
+    private final PasswordEncoder passwordEncoder;
     private static final String EMAIL_ADDRESS = "harmonicrainbow7@gmail.com";
     private static final String DOMAIN = System.getenv("IPV4");
     private static final String PORT = "8080";
@@ -30,16 +32,17 @@ public class SignupService {
     }
 
     @Autowired
-    public SignupService(UsersRepo usersRepo, EmailSenderService emailSenderService) {
+    public SignupService(UsersRepo usersRepo, EmailSenderService emailSenderService, PasswordEncoder passwordEncoder) {
         this.usersRepo = usersRepo;
         this.emailSenderService = emailSenderService;
+        this.passwordEncoder = passwordEncoder;
     }
     private boolean validatePassword(String password) {
         return password.matches(PasswordValidator.VERSION1.PASSWORD_VALIDATOR_REGEX);
     }
     private boolean checkIfAlreadyRegistered(String email) {
-        List<User> users = usersRepo.findByEmail(email);
-        return users.size() > 0;
+        User user = usersRepo.findByEmail(email);
+        return user != null;
     }
     private void sendEmail(UUID emailConfirmationToken, String email) {
         String confirmationCall = "http://" + DOMAIN + ":" + PORT + "/api/user/confirmtoken?" + "token=" + emailConfirmationToken;
@@ -73,7 +76,7 @@ public class SignupService {
         usersRepo.save(
                 new User(
                         signupForm.email(),
-                        String.valueOf(signupForm.password().hashCode()),
+                        passwordEncoder.encode(signupForm.password()),
                         false,
                         emailConfirmationToken));
         sendEmail(emailConfirmationToken, signupForm.email());
