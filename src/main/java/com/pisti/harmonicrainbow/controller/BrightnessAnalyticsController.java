@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("api/analytics")
-public class AnalyticsController {
+public class BrightnessAnalyticsController {
     private final BrightnessAnalyticsService analyticsService;
 
     @Autowired
-    public AnalyticsController(BrightnessAnalyticsService analyticsService) {
+    public BrightnessAnalyticsController(BrightnessAnalyticsService analyticsService) {
         this.analyticsService = analyticsService;
     }
     @GetMapping("brightness")
