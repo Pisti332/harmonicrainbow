@@ -1,7 +1,6 @@
 package com.pisti.harmonicrainbow.controller;
 
-import com.pisti.harmonicrainbow.service.AnalyticsService;
-import jakarta.servlet.http.HttpServletRequest;
+import com.pisti.harmonicrainbow.service.BrightnessAnalyticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,10 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("api/analytics")
 public class AnalyticsController {
-    private final AnalyticsService analyticsService;
+    private final BrightnessAnalyticsService analyticsService;
 
     @Autowired
-    public AnalyticsController(AnalyticsService analyticsService) {
+    public AnalyticsController(BrightnessAnalyticsService analyticsService) {
         this.analyticsService = analyticsService;
     }
     @GetMapping("brightness")
