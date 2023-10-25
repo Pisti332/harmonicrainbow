@@ -13,10 +13,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class AnalyticsService {
+public class BrightnessAnalyticsService {
     private final ImageService imageService;
 
-    public AnalyticsService(ImageService imageService) {
+    public BrightnessAnalyticsService(ImageService imageService) {
         this.imageService = imageService;
     }
 
