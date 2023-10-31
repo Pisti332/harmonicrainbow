@@ -35,43 +35,39 @@ public class ColorChangeService {
                 BufferedImage bufferedImage = ImageIO.read(image.getInputStream());
                 byte[] colorValues = ((DataBufferByte) bufferedImage.getRaster().getDataBuffer()).getData();
 
-                mutateRangeOfPixels(colorValues, body.get("from"), body.get("to"), body.get("newColor"));
+                int imageType = bufferedImage.getType();
+                String formatName;
+                int[] bandOffsets;
+                if (imageType == BufferedImage.TYPE_INT_RGB) {
+                    bandOffsets = new int[]{0, 1, 2};
+                    formatName = "JPEG";
+                } else if (imageType == BufferedImage.TYPE_3BYTE_BGR) {
+                    bandOffsets = new int[]{2, 1, 0};
+                    formatName = "JPEG";
+                } else if (imageType == BufferedImage.TYPE_INT_ARGB) {
+                    bandOffsets = new int[]{0, 1, 2, 3};
+                    formatName = "PNG";
+                } else if (imageType == BufferedImage.TYPE_4BYTE_ABGR) {
+                    bandOffsets = new int[]{3, 2, 1, 0};
+                    formatName = "PNG";
+                } else {
+                    bandOffsets = new int[]{0, 1, 2};
+                    formatName = "JPEG";
+                }
 
-                System.out.println(colorValues.length);
+                mutateRangeOfPixels(colorValues,
+                        body.get("from"),
+                        body.get("to"),
+                        body.get("newColor"),
+                        imageType);
+
 
                 int width = bufferedImage.getWidth();
                 int height = bufferedImage.getHeight();
-                // Create a DataBuffer from the pixel byte array
+
+
                 DataBuffer dataBuffer = new DataBufferByte(colorValues, colorValues.length);
 
-                System.out.println(bufferedImage.getType());
-                String formatName;
-                int[] bandOffsets;
-                if (bufferedImage.getType() == BufferedImage.TYPE_INT_RGB) {
-                    bandOffsets = new int[]{0, 1, 2};
-                    formatName = "JPEG";
-                }
-                else if (bufferedImage.getType() == BufferedImage.TYPE_3BYTE_BGR) {
-                    bandOffsets = new int[]{2, 1, 0};
-                    formatName = "JPEG";
-                }
-                else if (bufferedImage.getType() == BufferedImage.TYPE_INT_ARGB) {
-                    bandOffsets = new int[]{0, 1, 2, 3};
-                    formatName = "PNG";
-                }
-                else if (bufferedImage.getType() == BufferedImage.TYPE_4BYTE_ABGR) {
-                    bandOffsets = new int[]{3, 2, 1, 0};
-                    formatName = "PNG";
-                }
-                else if (bufferedImage.getType() == BufferedImage.TYPE_INT_ARGB) {
-                    bandOffsets = new int[]{0, 1, 2, 3};
-                    formatName = "PNG";
-                }
-                else {
-                    bandOffsets = new int[]{0, 1, 2};
-                    formatName = "JPEG";
-                }
-                // Define the SampleModel for the specified image type
                 WritableRaster raster = WritableRaster.createInterleavedRaster(dataBuffer,
                         width,
                         height,
@@ -80,7 +76,6 @@ public class ColorChangeService {
                         bandOffsets,
                         null);
 
-                // Create the BufferedImage using the ColorModel and Raster
                 BufferedImage newImage = new BufferedImage(width,
                         height,
                         bufferedImage.getType());
@@ -102,23 +97,62 @@ public class ColorChangeService {
             return imageResponse;
         }
     }
+
     private void mutateRangeOfPixels(byte[] pixels, Map<String, Integer> from,
-                                        Map<String, Integer> to,
-                                        Map<String, Integer> newColor) {
-//        float redAvg = (float) (from.get("red") + to.get("red")) / 2;
-//        float greenAvg = (float) (from.get("green") + to.get("green")) / 2;
-//        float blueAvg = (float) (from.get("blue") + to.get("blue")) / 2;
-        for (int i = 0; i < pixels.length; i++) {
-            int current = Byte.toUnsignedInt(pixels[i]);
-            if ((i + 1) % 2 == 0 && current >= from.get("green") && current <= to.get("green")) {
-                pixels[i] = newColor.get("green").byteValue();
-            }
-            else if ((i + 1) % 3 == 0 && current >= from.get("blue") && current <= to.get("blue")) {
-                pixels[i] = newColor.get("blue").byteValue();
-            }
-            else if (current >= from.get("red") && current <= to.get("red")) {
-                pixels[i] = newColor.get("red").byteValue();
+                                     Map<String, Integer> to,
+                                     Map<String, Integer> newColor,
+                                     int imageType) {
+        float redAvg = (float) (from.get("red") + to.get("red")) / 2;
+        float greenAvg = (float) (from.get("green") + to.get("green")) / 2;
+        float blueAvg = (float) (from.get("blue") + to.get("blue")) / 2;
+        if (imageType == BufferedImage.TYPE_3BYTE_BGR) {
+            for (int i = 0; i < pixels.length; i += 3) {
+                int blue = Byte.toUnsignedInt(pixels[i]);
+                int green = Byte.toUnsignedInt(pixels[i + 1]);
+                int red = Byte.toUnsignedInt(pixels[i + 2]);
+
+                if (blue >= from.get("blue") && blue <= to.get("blue") &&
+                        green >= from.get("green") && green <= to.get("green") &&
+                        red >= from.get("red") && red <= to.get("red")) {
+                    int newRed = scaleColor(newColor.get("red"), red, redAvg);
+                    int newGreen = scaleColor(newColor.get("green"), green, greenAvg);
+                    int newBlue = scaleColor(newColor.get("blue"), blue, blueAvg);
+                    pixels[i] = (byte) newBlue;
+                    pixels[i + 1] = (byte) newGreen;
+                    pixels[i + 2] = (byte) newRed;
+                }
             }
         }
+        if (imageType == BufferedImage.TYPE_4BYTE_ABGR) {
+            for (int i = 0; i < pixels.length; i += 4) {
+                int blue = Byte.toUnsignedInt(pixels[i + 1]);
+                int green = Byte.toUnsignedInt(pixels[i + 2]);
+                int red = Byte.toUnsignedInt(pixels[i + 3]);
+
+                if (blue >= from.get("blue") && blue <= to.get("blue") &&
+                        green >= from.get("green") && green <= to.get("green") &&
+                        red >= from.get("red") && red <= to.get("red")) {
+                    int newRed = scaleColor(newColor.get("red"), red, redAvg);
+                    int newGreen = scaleColor(newColor.get("green"), green, greenAvg);
+                    int newBlue = scaleColor(newColor.get("blue"), blue, blueAvg);
+                    pixels[i + 1] = (byte) newBlue;
+                    pixels[i + 2] = (byte) newGreen;
+                    pixels[i + 3] = (byte) newRed;
+                }
+            }
+        }
+        else {
+            System.out.println("Unsupported bufferedimage type!");
+        }
+    }
+    private int scaleColor(int newColor, int currentColor, float avgColor) {
+        int calculatedColor = (int) (newColor * currentColor / avgColor);
+        if (calculatedColor > 255) {
+            calculatedColor = 255;
+        }
+        else if (calculatedColor < 0) {
+            calculatedColor = 0;
+        }
+        return calculatedColor;
     }
 }
