@@ -30,12 +30,12 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/othneildrew/Best-README-Template">
+  <a href="https://github.com/Pisti332/harmonicrainbow/tree/color-change-service">
     <img src="./images/logo.png" alt="Logo" width="400">
   </a>
 
   <p align="center">
-  <h3>You need to extract data from images for your application? You are at the right place! HARMONICRAINBOW is an API offering numerous aspects of image analyzation.</h3>
+  <h3>Do you need to extract data from images for your application or edit an image? You are at the right place! HARMONICRAINBOW is an API offering numerous aspects of image analyzation.</h3>
     <br />
     <a href="https://github.com/Pisti332/harmonicrainbow"><strong>Explore the docs »</strong></a>
     <br />
@@ -77,7 +77,7 @@
 <!-- ABOUT THE PROJECT -->
 ## Preview
 
-[![Product Name Screen Shot][product-screenshot]](https://github.com/CodecoolGlobal/el-proyecte-grande-sprint-1-java-Pisti332/blob/development/images/Photoboxshot.jpg)
+[![Product Name Screen Shot][product-screenshot]](https://github.com/Pisti332/harmonicrainbow/tree/color-change-service)
 
 
 
