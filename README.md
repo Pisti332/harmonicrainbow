@@ -182,7 +182,7 @@ Varga Istvan - <a href="https://www.linkedin.com/feed/">Linkedin</a> - varga.ist
 [license-url]: https://github.com/Pisti332/harmonicrainbow/blob/development/licence.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://www.linkedin.com/in/varga-istvan-p1/
-[product-screenshot]: images/demo-screenshot.png
+[product-screenshot]: images/demo-screenshot1.png
 [Spring]: https://img.shields.io/badge/springboot-20232A?style=for-the-badge&logo=springboot&logoColor=#008000
 [spring-url]: https://spring.io/
 [PostgreSQL]: https://img.shields.io/badge/postgresql-20232A?style=for-the-badge&logo=postgresql&logoColor=#008000
