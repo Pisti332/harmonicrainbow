@@ -30,12 +30,12 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/othneildrew/Best-README-Template">
+  <a href="https://github.com/Pisti332/harmonicrainbow/tree/color-change-service">
     <img src="./images/logo.png" alt="Logo" width="400">
   </a>
 
   <p align="center">
-  <h3>You need to extract data from images for your application? You are at the right place! HARMONICRAINBOW is an API offering numerous aspects of image analyzation.</h3>
+  <h3>Do you need to extract data from images for your application or edit an image? You are at the right place! HARMONICRAINBOW is an API offering numerous aspects of image analyzation.</h3>
     <br />
     <a href="https://github.com/Pisti332/harmonicrainbow"><strong>Explore the docs »</strong></a>
     <br />
@@ -77,7 +77,7 @@
 <!-- ABOUT THE PROJECT -->
 ## Preview
 
-[![Product Name Screen Shot][product-screenshot]](https://github.com/CodecoolGlobal/el-proyecte-grande-sprint-1-java-Pisti332/blob/development/images/Photoboxshot.jpg)
+[![Product Name Screen Shot][product-screenshot]](https://github.com/Pisti332/harmonicrainbow/tree/color-change-service)
 
 
 
@@ -182,7 +182,7 @@ Varga Istvan - <a href="https://www.linkedin.com/feed/">Linkedin</a> - varga.ist
 [license-url]: https://github.com/Pisti332/harmonicrainbow/blob/development/licence.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://www.linkedin.com/in/varga-istvan-p1/
-[product-screenshot]: images/demo-screenshot1.png
+[product-screenshot]: images/demo-screenshot.png
 [Spring]: https://img.shields.io/badge/springboot-20232A?style=for-the-badge&logo=springboot&logoColor=#008000
 [spring-url]: https://spring.io/
 [PostgreSQL]: https://img.shields.io/badge/postgresql-20232A?style=for-the-badge&logo=postgresql&logoColor=#008000
