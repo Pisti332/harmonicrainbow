@@ -35,6 +35,9 @@ public class ColorChangeService {
                 BufferedImage bufferedImage = ImageIO.read(image.getInputStream());
                 byte[] colorValues = ((DataBufferByte) bufferedImage.getRaster().getDataBuffer()).getData();
 
+                int width = bufferedImage.getWidth();
+                int height = bufferedImage.getHeight();
+
                 int imageType = bufferedImage.getType();
                 String formatName;
                 int[] bandOffsets;
@@ -60,11 +63,6 @@ public class ColorChangeService {
                         body.get("to"),
                         body.get("newColor"),
                         imageType);
-
-
-                int width = bufferedImage.getWidth();
-                int height = bufferedImage.getHeight();
-
 
                 DataBuffer dataBuffer = new DataBufferByte(colorValues, colorValues.length);
 
