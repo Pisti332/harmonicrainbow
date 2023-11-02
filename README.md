@@ -107,8 +107,8 @@ This section should list any major frameworks/libraries used to bootstrap the pr
 
 * clone the repository with the ```git clone git@github.com:Pisti332/harmonicrainbow.git``` command
 * start docker desktop app
-* navigate into "ForDocker" folder
-* give the ```docker compose up``` command the "ForDocker" folder
+* navigate into "ForDocker" folder in a terminal
+* give the ```docker compose up``` command in the "ForDocker" folder
 * the endpoints should be available on ```http://localhost:8080/```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
