@@ -15,7 +15,7 @@ import java.util.Map;
 
 @Service
 public class ColorCompositionService {
-    private ImageService imageService;
+    private final ImageService imageService;
 
     @Autowired
     public ColorCompositionService(ImageService imageService) {
@@ -27,6 +27,7 @@ public class ColorCompositionService {
         if (imageResponse.getStatusCode() == HttpStatus.OK) {
             try {
                 ByteArrayResource image = (ByteArrayResource) imageResponse.getBody();
+                assert image != null;
                 BufferedImage bufferedImage = ImageIO.read(image.getInputStream());
                 byte[] pixels = ((DataBufferByte) bufferedImage.getRaster().getDataBuffer()).getData();
                 Map<String, Float> response = getColorComposition(pixels);

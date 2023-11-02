@@ -30,7 +30,7 @@ public class BlackAndWhiteService {
             try {
                 ByteArrayResource image = (ByteArrayResource) imageResponse.getBody();
                 BufferedImage bufferedImage = ImageIO.read(image.getInputStream());
-                byte[] pixels = ((DataBufferByte) bufferedImage.getRaster().getDataBuffer()).getData();
+                byte[] colorValues = ((DataBufferByte) bufferedImage.getRaster().getDataBuffer()).getData();
 
                 int width = bufferedImage.getWidth();
                 int height = bufferedImage.getHeight();
@@ -55,9 +55,9 @@ public class BlackAndWhiteService {
                     formatName = "JPEG";
                 }
 
-                mutateToBlackAndWhite(pixels, bufferedImage.getType());
+                mutateToBlackAndWhite(colorValues, bufferedImage.getType());
 
-                DataBuffer dataBuffer = new DataBufferByte(pixels, pixels.length);
+                DataBuffer dataBuffer = new DataBufferByte(colorValues, colorValues.length);
 
                 WritableRaster raster = WritableRaster.createInterleavedRaster(dataBuffer,
                         width,

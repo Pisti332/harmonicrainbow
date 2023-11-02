@@ -27,58 +27,75 @@ import static org.mockito.Mockito.when;
 public class BlackAndWhiteServiceTest {
     @Autowired
     private BlackAndWhiteService blackAndWhiteService;
-    private BufferedImage bufferedImage;
+    private BufferedImage bufferedImageJpg;
+    private BufferedImage bufferedImagePng;
 
     @MockBean
     private ImageService imageService;
 
     @BeforeAll
     void readImage() throws IOException {
-        String image = "src/test/java/com/pisti/harmonicrainbow/service/images/test.jpg";
-        this.bufferedImage = ImageIO.read(new File(image));
+        String imageJpg = "src/test/java/com/pisti/harmonicrainbow/service/images/test.jpg";
+        this.bufferedImageJpg = ImageIO.read(new File(imageJpg));
+        String imagePng = "src/test/java/com/pisti/harmonicrainbow/service/images/test1.png";
+        this.bufferedImagePng = ImageIO.read(new File(imagePng));
     }
 
     @BeforeEach
     void setup() throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ImageIO.write(this.bufferedImage, "jpg", baos);
-        byte[] bytes = baos.toByteArray();
-        ByteArrayResource inputStream = new ByteArrayResource(bytes);
-        ResponseEntity<Object> response = ResponseEntity
+        ByteArrayOutputStream baosJpg = new ByteArrayOutputStream();
+        ImageIO.write(this.bufferedImageJpg, "jpg", baosJpg);
+        byte[] bytesJpg = baosJpg.toByteArray();
+        ByteArrayResource inputStreamJpg = new ByteArrayResource(bytesJpg);
+        ResponseEntity<Object> responseJpg = ResponseEntity
                 .status(HttpStatus.OK)
-                .contentLength(inputStream.contentLength())
-                .body(inputStream);
-        when(imageService.getImageByEmailAndName("test@test.com", "test")).thenReturn(response);
+                .contentLength(inputStreamJpg.contentLength())
+                .body(inputStreamJpg);
+
+        ByteArrayOutputStream baosPng = new ByteArrayOutputStream();
+        ImageIO.write(this.bufferedImagePng, "png", baosPng);
+        byte[] bytesPng = baosPng.toByteArray();
+        ByteArrayResource inputStreamPng = new ByteArrayResource(bytesPng);
+        ResponseEntity<Object> responsePng = ResponseEntity
+                .status(HttpStatus.OK)
+                .contentLength(inputStreamPng.contentLength())
+                .body(inputStreamPng);
+        when(imageService.getImageByEmailAndName("test@test.com", "test")).thenReturn(responseJpg);
+        when(imageService.getImageByEmailAndName("test@test.com", "test1")).thenReturn(responsePng);
     }
 
     @Test
     @WithMockUser(username = "testuser")
-    void isImageBlackAndWhite() throws IOException {
+    void isImageBlackAndWhiteJpg() throws IOException {
         ResponseEntity<Object> response = blackAndWhiteService.getBlackAndWhite("test@test.com", "test");
         ByteArrayResource image = (ByteArrayResource) response.getBody();
         BufferedImage bufferedImage = ImageIO.read(image.getInputStream());
         byte[] colorValues = ((DataBufferByte) bufferedImage.getRaster().getDataBuffer()).getData();
-        if (bufferedImage.getType() == BufferedImage.TYPE_INT_ARGB ||
-                bufferedImage.getType() == BufferedImage.TYPE_4BYTE_ABGR) {
-            for (int i = 0; i < colorValues.length; i += 4) {
-                byte f = colorValues[i + 3];
-                byte s = colorValues[i + 2];
-                byte t = colorValues[i + 1];
-                if (f != s || f != t) {
-                    fail();
-                }
-            }
-        } else if (bufferedImage.getType() == BufferedImage.TYPE_3BYTE_BGR ||
-                bufferedImage.getType() == BufferedImage.TYPE_INT_RGB) {
-            for (int i = 0; i < colorValues.length; i += 3) {
-                byte f = colorValues[i];
-                byte s = colorValues[i + 1];
-                byte t = colorValues[i + 2];
-                if (f != s || f != t) {
-                    fail();
-                }
+        for (int i = 0; i < colorValues.length; i += 3) {
+            byte f = colorValues[i];
+            byte s = colorValues[i + 1];
+            byte t = colorValues[i + 2];
+            if (f != s || f != t) {
+                fail();
             }
         }
+    }
 
+    @Test
+    @WithMockUser(username = "testuser")
+    void isImageBlackAndWhitePng() throws IOException {
+        ResponseEntity<Object> response = blackAndWhiteService.getBlackAndWhite("test@test.com", "test1");
+        ByteArrayResource image = (ByteArrayResource) response.getBody();
+        BufferedImage bufferedImage = ImageIO.read(image.getInputStream());
+        byte[] colorValues = ((DataBufferByte) bufferedImage.getRaster().getDataBuffer()).getData();
+        for (int i = 0; i < colorValues.length; i += 3) {
+            byte f = colorValues[i];
+            byte s = colorValues[i + 1];
+            byte t = colorValues[i + 2];
+            if (f != s || f != t) {
+                fail();
+            }
+        }
     }
 }
+
