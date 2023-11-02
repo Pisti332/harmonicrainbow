@@ -102,14 +102,13 @@ This section should list any major frameworks/libraries used to bootstrap the pr
 ### Prerequisites
   * download docker desktop from <a href="https://www.docker.com/products/docker-desktop">https://www.docker.com/products/docker-desktop/</a>
   * set up git: <a href="https://git-scm.com/downloads">https://git-scm.com/downloads</a>
-  * get Maven: <a href="https://maven.apache.org/">https://maven.apache.org/</a>
 
 ### Installation
 
 * clone the repository with the ```git clone git@github.com:Pisti332/harmonicrainbow.git``` command
 * start docker desktop app
-* create a .jar file with maven
-* give the ```docker compose up``` command in the root folder
+* navigate into "ForDocker" folder
+* give the ```docker compose up``` command the "ForDocker" folder
 * the endpoints should be available on ```http://localhost:8080/```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
