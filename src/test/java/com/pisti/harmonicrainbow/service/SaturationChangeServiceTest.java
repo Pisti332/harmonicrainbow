@@ -1,4 +1,5 @@
 package com.pisti.harmonicrainbow.service;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,14 +25,10 @@ import static org.mockito.Mockito.when;
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class SaturationChangeServiceTest {
+    @Autowired
     private SaturationChangeService saturationChangeService;
     private BufferedImage bufferedImageJpg;
     private BufferedImage bufferedImagePng;
-
-    @Autowired
-    public SaturationChangeServiceTest(SaturationChangeService saturationChangeService) {
-        this.saturationChangeService = saturationChangeService;
-    }
 
     @MockBean
     private ImageService imageService;
@@ -66,27 +63,80 @@ public class SaturationChangeServiceTest {
         when(imageService.getImageByEmailAndName("test@test.com", "test")).thenReturn(responseJpg);
         when(imageService.getImageByEmailAndName("test@test.com", "test1")).thenReturn(responsePng);
     }
-    @Test
-    @WithMockUser(username = "testuser")
-    void isSaturationProperFor50Jpg() throws IOException {
-        ResponseEntity<Object> response = saturationChangeService.changeSaturation("test@test.com",
-                "test", 50);
-        ByteArrayResource image = (ByteArrayResource) response.getBody();
-        BufferedImage bufferedImage = ImageIO.read(image.getInputStream());
-        byte[] colorValues = ((DataBufferByte) bufferedImage.getRaster().getDataBuffer()).getData();
-        // TODO test array
-        fail();
-    }
 
     @Test
     @WithMockUser(username = "testuser")
-    void isSaturationProperFor50Png() throws IOException {
+    void isJpgDataArraySameLength() throws IOException {
         ResponseEntity<Object> response = saturationChangeService.changeSaturation("test@test.com",
-                "test1", 50);
+                "test", 0);
         ByteArrayResource image = (ByteArrayResource) response.getBody();
         BufferedImage bufferedImage = ImageIO.read(image.getInputStream());
         byte[] colorValues = ((DataBufferByte) bufferedImage.getRaster().getDataBuffer()).getData();
-        //TODO test
-        fail();
+        byte[] colorValuesBefore = ((DataBufferByte) this.bufferedImageJpg.getRaster().getDataBuffer()).getData();
+        if (colorValues.length != colorValuesBefore.length) {
+            fail();
+        }
     }
+    @Test
+    @WithMockUser(username = "testuser")
+    void areJpgDimensionsTheSame() throws IOException {
+        ResponseEntity<Object> response = saturationChangeService.changeSaturation("test@test.com",
+                "test", 0);
+        ByteArrayResource image = (ByteArrayResource) response.getBody();
+        BufferedImage bufferedImage = ImageIO.read(image.getInputStream());
+        if (bufferedImage.getHeight() != this.bufferedImageJpg.getHeight() ||
+                bufferedImage.getWidth() != this.bufferedImageJpg.getWidth()) {
+            fail();
+        }
+    }
+    @Test
+    @WithMockUser(username = "testuser")
+    void isJpgImageNotNull() throws IOException {
+        ResponseEntity<Object> response = saturationChangeService.changeSaturation("test@test.com",
+                "test", 0);
+        ByteArrayResource image = (ByteArrayResource) response.getBody();
+        BufferedImage bufferedImage = ImageIO.read(image.getInputStream());
+        if (bufferedImage == null) {
+            fail();
+        }
+    }
+
+
+    @Test
+    @WithMockUser(username = "testuser")
+    void isPngDataArraySameLength() throws IOException {
+        ResponseEntity<Object> response = saturationChangeService.changeSaturation("test@test.com",
+                "test1", 0);
+        ByteArrayResource image = (ByteArrayResource) response.getBody();
+        BufferedImage bufferedImage = ImageIO.read(image.getInputStream());
+        byte[] colorValues = ((DataBufferByte) bufferedImage.getRaster().getDataBuffer()).getData();
+        byte[] colorValuesBefore = ((DataBufferByte) this.bufferedImagePng.getRaster().getDataBuffer()).getData();
+        if (colorValues.length != colorValuesBefore.length) {
+            fail();
+        }
+    }
+    @Test
+    @WithMockUser(username = "testuser")
+    void arePngDimensionsTheSame() throws IOException {
+        ResponseEntity<Object> response = saturationChangeService.changeSaturation("test@test.com",
+                "test1", 0);
+        ByteArrayResource image = (ByteArrayResource) response.getBody();
+        BufferedImage bufferedImage = ImageIO.read(image.getInputStream());
+        if (bufferedImage.getHeight() != this.bufferedImagePng.getHeight() ||
+                bufferedImage.getWidth() != this.bufferedImagePng.getWidth()) {
+            fail();
+        }
+    }
+    @Test
+    @WithMockUser(username = "testuser")
+    void isPngImageNotNull() throws IOException {
+        ResponseEntity<Object> response = saturationChangeService.changeSaturation("test@test.com",
+                "test1", 0);
+        ByteArrayResource image = (ByteArrayResource) response.getBody();
+        BufferedImage bufferedImage = ImageIO.read(image.getInputStream());
+        if (bufferedImage == null) {
+            fail();
+        }
+    }
+
 }

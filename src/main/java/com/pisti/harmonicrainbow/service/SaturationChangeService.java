@@ -1,6 +1,7 @@
 package com.pisti.harmonicrainbow.service;
 
 import org.apache.coyote.Response;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ import java.util.HashMap;
 public class SaturationChangeService {
     private ImageService imageService;
 
+    @Autowired
     public SaturationChangeService(ImageService imageService) {
         this.imageService = imageService;
     }
@@ -53,8 +55,7 @@ public class SaturationChangeService {
                     bandOffsets = new int[]{0, 1, 2};
                     formatName = "JPEG";
                 }
-
-                mutateSaturation(colorValues, bufferedImage.getType(), saturation);
+                mutateSaturation(colorValues, imageType, saturation);
 
                 DataBuffer dataBuffer = new DataBufferByte(colorValues, colorValues.length);
 
@@ -75,8 +76,8 @@ public class SaturationChangeService {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 ImageIO.write(newImage, formatName, baos);
                 byte[] bytes = baos.toByteArray();
-                ByteArrayResource inputStream = new ByteArrayResource(bytes);
 
+                ByteArrayResource inputStream = new ByteArrayResource(bytes);
                 return ResponseEntity
                         .status(HttpStatus.OK)
                         .contentLength(inputStream.contentLength())
@@ -89,6 +90,79 @@ public class SaturationChangeService {
         }
     }
 
-    private void mutateSaturation(byte[] colorValues, int type, int saturation) {
+    private void mutateSaturation(byte[] colorValues, int imageType, int saturation) {
+        int absSaturation = Math.abs(saturation);
+        if (imageType == BufferedImage.TYPE_3BYTE_BGR) {
+            if (saturation < 0 && saturation >= -100) {
+                for (int i = 0; i < colorValues.length; i += 3) {
+                    int red = Byte.toUnsignedInt(colorValues[i + 2]);
+                    int green = Byte.toUnsignedInt(colorValues[i + 1]);
+                    int blue = Byte.toUnsignedInt(colorValues[i]);
+                    int bw = (red + green + blue) / 3;
+                    int redDiff = bw - red;
+                    int greenDiff = bw - green;
+                    int blueDiff = bw - blue;
+                    float redPerPercent = (float) redDiff / 100;
+                    float greenPerPercent = (float) greenDiff / 100;
+                    float bluePerPercent = (float) blueDiff / 100;
+                    colorValues[i + 2] = (byte) (absSaturation * redPerPercent + red);
+                    colorValues[i + 1] = (byte) (absSaturation * greenPerPercent + green);
+                    colorValues[i] = (byte) (absSaturation * bluePerPercent + blue);
+                }
+            } else if (saturation > 0 && saturation <= 100) {
+                for (int i = 0; i < colorValues.length; i += 3) {
+                    int red = Byte.toUnsignedInt(colorValues[i + 2]);
+                    System.out.println(red);
+                    int green = Byte.toUnsignedInt(colorValues[i + 1]);
+                    int blue = Byte.toUnsignedInt(colorValues[i]);
+                    int max1 = Math.max(red, green);
+                    int max = Math.max(blue, max1);
+                    System.out.println(max);
+                    float maxDiff = (float) 255 / max - 1;
+                    System.out.println(maxDiff);
+                    float maxDiffPerPercent = maxDiff / 100;
+                    System.out.println(maxDiffPerPercent);
+
+                    colorValues[i + 2] = (byte) ((saturation * maxDiffPerPercent + 1) * red);
+                    System.out.println((saturation * maxDiffPerPercent + 1) * red);
+                    colorValues[i + 1] = (byte) ((saturation * maxDiffPerPercent + 1) * green);
+                    colorValues[i] = (byte) ((saturation * maxDiffPerPercent + 1) * blue);
+                }
+            }
+        } else if (imageType == BufferedImage.TYPE_4BYTE_ABGR) {
+            if (saturation < 0 && saturation >= -100) {
+                for (int i = 0; i < colorValues.length; i += 4) {
+                    int red = Byte.toUnsignedInt(colorValues[i + 3]);
+                    int green = Byte.toUnsignedInt(colorValues[i + 2]);
+                    int blue = Byte.toUnsignedInt(colorValues[i + 1]);
+                    int bw = (red + green + blue) / 3;
+                    int redDiff = bw - red;
+                    int greenDiff = bw - green;
+                    int blueDiff = bw - blue;
+                    float redPerPercent = (float) redDiff / 100;
+                    float greenPerPercent = (float) greenDiff / 100;
+                    float bluePerPercent = (float) blueDiff / 100;
+                    colorValues[i + 3] = (byte) (absSaturation * redPerPercent + red);
+                    colorValues[i + 2] = (byte) (absSaturation * greenPerPercent + green);
+                    colorValues[i + 1] = (byte) (absSaturation * bluePerPercent + blue);
+                }
+            } else if (saturation > 0 && saturation <= 100) {
+                for (int i = 0; i < colorValues.length; i += 4) {
+                    int red = Byte.toUnsignedInt(colorValues[i + 3]);
+                    int green = Byte.toUnsignedInt(colorValues[i + 2]);
+                    int blue = Byte.toUnsignedInt(colorValues[i + 1]);
+                    int max1 = Math.max(red, green);
+                    int max = Math.max(blue, max1);
+                    float maxDiff = (float) 255 / max - 1;
+                    float maxDiffPerPercent = maxDiff / 100;
+
+                    colorValues[i + 3] = (byte) ((saturation * maxDiffPerPercent + 1) * red);
+                    colorValues[i + 2] = (byte) ((saturation * maxDiffPerPercent + 1) * green);
+                    colorValues[i + 1] = (byte) ((saturation * maxDiffPerPercent + 1) * blue);
+                }
+            }
+        } else {
+            System.out.println("Unsupported bufferedimage type!");
+        }
     }
 }
