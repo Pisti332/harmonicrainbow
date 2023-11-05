@@ -27,7 +27,6 @@ public class SaturationChangeService {
 
     public ResponseEntity<Object> changeSaturation(String email, String name, int saturation) {
         if (saturation > 100 || saturation < -100) {
-//            Map<String, String> response = new HashMap<>();
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
                     .body("");
@@ -92,7 +91,9 @@ public class SaturationChangeService {
                 return new ResponseEntity<>(new HashMap<>(), HttpStatus.BAD_REQUEST);
             }
         } else {
-            return imageResponse;
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("");
         }
     }
 
