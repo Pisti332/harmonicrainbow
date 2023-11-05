@@ -91,9 +91,7 @@ public class SaturationChangeService {
                 return new ResponseEntity<>(new HashMap<>(), HttpStatus.BAD_REQUEST);
             }
         } else {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body("");
+            return imageResponse;
         }
     }
 

@@ -81,12 +81,9 @@ public class ImageService {
         try {
             Image image = imageRepo.getImageByEmailAndName(email, name);
             if (image == null) {
-                response.put("isDownloadSuccessful", "false");
-                response.put("reason", "no such image");
                 return ResponseEntity
                         .status(HttpStatus.BAD_REQUEST)
-                        .contentLength(response.size())
-                        .body(response);
+                        .body("");
             }
             BufferedImage bufferedImage = imageReader.readImage(name, image.getFormat());
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -99,12 +96,9 @@ public class ImageService {
                     .body(inputStream);
 
         } catch (Exception e) {
-            response.put("isDownloadSuccessful", "false");
-            response.put("reason", "there was an error downloading the image");
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
-                    .contentLength(response.size())
-                    .body(response);
+                    .body("");
         }
     }
 }

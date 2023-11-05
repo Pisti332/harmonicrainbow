@@ -60,8 +60,12 @@ public class BlackAndWhiteServiceTest {
                 .status(HttpStatus.OK)
                 .contentLength(inputStreamPng.contentLength())
                 .body(inputStreamPng);
+        ResponseEntity<Object> badResponse = ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body("");
         when(imageService.getImageByEmailAndName("test@test.com", "test")).thenReturn(responseJpg);
         when(imageService.getImageByEmailAndName("test@test.com", "test1")).thenReturn(responsePng);
+        when(imageService.getImageByEmailAndName("test123@test.com", "asd")).thenReturn(badResponse);
     }
 
     @Test
@@ -95,6 +99,91 @@ public class BlackAndWhiteServiceTest {
             if (f != s || f != t) {
                 fail();
             }
+        }
+    }
+
+    @Test
+    @WithMockUser(username = "testuser")
+    void isJpgDataArraySameLength() throws IOException {
+        ResponseEntity<Object> response = blackAndWhiteService.getBlackAndWhite("test@test.com",
+                "test");
+        ByteArrayResource image = (ByteArrayResource) response.getBody();
+        BufferedImage bufferedImage = ImageIO.read(image.getInputStream());
+        byte[] colorValues = ((DataBufferByte) bufferedImage.getRaster().getDataBuffer()).getData();
+        byte[] colorValuesBefore = ((DataBufferByte) this.bufferedImageJpg.getRaster().getDataBuffer()).getData();
+        if (colorValues.length != colorValuesBefore.length) {
+            fail();
+        }
+    }
+
+    @Test
+    @WithMockUser(username = "testuser")
+    void areJpgDimensionsTheSame() throws IOException {
+        ResponseEntity<Object> response = blackAndWhiteService.getBlackAndWhite("test@test.com",
+                "test");
+        ByteArrayResource image = (ByteArrayResource) response.getBody();
+        BufferedImage bufferedImage = ImageIO.read(image.getInputStream());
+        if (bufferedImage.getHeight() != this.bufferedImageJpg.getHeight() ||
+                bufferedImage.getWidth() != this.bufferedImageJpg.getWidth()) {
+            fail();
+        }
+    }
+
+    @Test
+    @WithMockUser(username = "testuser")
+    void isJpgImageNotNull() throws IOException {
+        ResponseEntity<Object> response = blackAndWhiteService.getBlackAndWhite("test@test.com",
+                "test");
+        ByteArrayResource image = (ByteArrayResource) response.getBody();
+        BufferedImage bufferedImage = ImageIO.read(image.getInputStream());
+        if (bufferedImage == null) {
+            fail();
+        }
+    }
+
+    @Test
+    @WithMockUser(username = "testuser")
+    void isPngDataArraySameLength() throws IOException {
+        ResponseEntity<Object> response = blackAndWhiteService.getBlackAndWhite("test@test.com",
+                "test1");
+        ByteArrayResource image = (ByteArrayResource) response.getBody();
+        BufferedImage bufferedImage = ImageIO.read(image.getInputStream());
+        byte[] colorValues = ((DataBufferByte) bufferedImage.getRaster().getDataBuffer()).getData();
+        byte[] colorValuesBefore = ((DataBufferByte) this.bufferedImagePng.getRaster().getDataBuffer()).getData();
+        if (colorValues.length != colorValuesBefore.length) {
+            fail();
+        }
+    }
+    @Test
+    @WithMockUser(username = "testuser")
+    void arePngDimensionsTheSame() throws IOException {
+        ResponseEntity<Object> response = blackAndWhiteService.getBlackAndWhite("test@test.com",
+                "test1");
+        ByteArrayResource image = (ByteArrayResource) response.getBody();
+        BufferedImage bufferedImage = ImageIO.read(image.getInputStream());
+        if (bufferedImage.getHeight() != this.bufferedImagePng.getHeight() ||
+                bufferedImage.getWidth() != this.bufferedImagePng.getWidth()) {
+            fail();
+        }
+    }
+    @Test
+    @WithMockUser(username = "testuser")
+    void isPngImageNotNull() throws IOException {
+        ResponseEntity<Object> response = blackAndWhiteService.getBlackAndWhite("test@test.com",
+                "test1");
+        ByteArrayResource image = (ByteArrayResource) response.getBody();
+        BufferedImage bufferedImage = ImageIO.read(image.getInputStream());
+        if (bufferedImage == null) {
+            fail();
+        }
+    }
+    @Test
+    @WithMockUser(username = "testuser")
+    void shouldReturn400IfNoSuchImage() {
+        ResponseEntity<Object> response = blackAndWhiteService.getBlackAndWhite("test123@test.com",
+                "asd");
+        if(!response.getStatusCode().equals(HttpStatus.BAD_REQUEST)) {
+            fail();
         }
     }
 }

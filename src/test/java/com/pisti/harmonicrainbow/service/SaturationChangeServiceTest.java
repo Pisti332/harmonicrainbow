@@ -60,8 +60,12 @@ public class SaturationChangeServiceTest {
                 .status(HttpStatus.OK)
                 .contentLength(inputStreamPng.contentLength())
                 .body(inputStreamPng);
+        ResponseEntity<Object> badResponse =  ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body("");
         when(imageService.getImageByEmailAndName("test@test.com", "test")).thenReturn(responseJpg);
         when(imageService.getImageByEmailAndName("test@test.com", "test1")).thenReturn(responsePng);
+        when(imageService.getImageByEmailAndName("test123@test.com", "asd")).thenReturn(badResponse);
     }
 
     @Test
@@ -143,6 +147,24 @@ public class SaturationChangeServiceTest {
     void doesReturnBadRequestIfSaturationBiggerThan100() {
         ResponseEntity<Object> response = saturationChangeService.changeSaturation("test@test.com",
                 "test", 110);
+        if(!response.getStatusCode().equals(HttpStatus.BAD_REQUEST)) {
+            fail();
+        }
+    }
+    @Test
+    @WithMockUser(username = "testuser")
+    void doesReturnBadRequestIfSaturationSmallerThanMinus100() {
+        ResponseEntity<Object> response = saturationChangeService.changeSaturation("test@test.com",
+                "test", -110);
+        if(!response.getStatusCode().equals(HttpStatus.BAD_REQUEST)) {
+            fail();
+        }
+    }
+    @Test
+    @WithMockUser(username = "testuser")
+    void shouldReturn400IfNoSuchImage() {
+        ResponseEntity<Object> response = saturationChangeService.changeSaturation("test123@test.com",
+                "asd", 0);
         if(!response.getStatusCode().equals(HttpStatus.BAD_REQUEST)) {
             fail();
         }
