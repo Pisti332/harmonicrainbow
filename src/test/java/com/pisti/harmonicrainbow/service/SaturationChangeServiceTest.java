@@ -138,5 +138,14 @@ public class SaturationChangeServiceTest {
             fail();
         }
     }
+    @Test
+    @WithMockUser(username = "testuser")
+    void doesReturnBadRequestIfSaturationBiggerThan100() {
+        ResponseEntity<Object> response = saturationChangeService.changeSaturation("test@test.com",
+                "test", 110);
+        if(!response.getStatusCode().equals(HttpStatus.BAD_REQUEST)) {
+            fail();
+        }
+    }
 
 }

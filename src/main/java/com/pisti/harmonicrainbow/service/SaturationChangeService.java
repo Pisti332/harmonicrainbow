@@ -1,6 +1,5 @@
 package com.pisti.harmonicrainbow.service;
 
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
@@ -15,6 +14,7 @@ import java.awt.image.WritableRaster;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class SaturationChangeService {
@@ -26,6 +26,12 @@ public class SaturationChangeService {
     }
 
     public ResponseEntity<Object> changeSaturation(String email, String name, int saturation) {
+        if (saturation > 100 || saturation < -100) {
+//            Map<String, String> response = new HashMap<>();
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("");
+        }
         ResponseEntity<Object> imageResponse = imageService.getImageByEmailAndName(email, name);
         if (imageResponse.getStatusCode() == HttpStatus.OK) {
             try {
@@ -112,19 +118,14 @@ public class SaturationChangeService {
             } else if (saturation > 0 && saturation <= 100) {
                 for (int i = 0; i < colorValues.length; i += 3) {
                     int red = Byte.toUnsignedInt(colorValues[i + 2]);
-                    System.out.println(red);
                     int green = Byte.toUnsignedInt(colorValues[i + 1]);
                     int blue = Byte.toUnsignedInt(colorValues[i]);
                     int max1 = Math.max(red, green);
                     int max = Math.max(blue, max1);
-                    System.out.println(max);
                     float maxDiff = (float) 255 / max - 1;
-                    System.out.println(maxDiff);
                     float maxDiffPerPercent = maxDiff / 100;
-                    System.out.println(maxDiffPerPercent);
 
                     colorValues[i + 2] = (byte) ((saturation * maxDiffPerPercent + 1) * red);
-                    System.out.println((saturation * maxDiffPerPercent + 1) * red);
                     colorValues[i + 1] = (byte) ((saturation * maxDiffPerPercent + 1) * green);
                     colorValues[i] = (byte) ((saturation * maxDiffPerPercent + 1) * blue);
                 }
