@@ -7,8 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
-import javax.imageio.ImageTypeSpecifier;
-import java.awt.*;
 import java.awt.image.*;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -24,9 +22,13 @@ public class ColorChangeService {
     }
 
     public ResponseEntity<Object> changeColors(Map<String, Map<String, Integer>> body, String email, String name) {
-        Map<String, String> response = new HashMap<>();
+        System.out.println(body.toString());
+        System.out.println(email);
+        System.out.println(name);
         if (body.get("from") == null || body.get("to") == null || body.get("newColor") == null) {
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("");
         }
         ResponseEntity<Object> imageResponse = imageService.getImageByEmailAndName(email, name);
         if (imageResponse.getStatusCode() == HttpStatus.OK) {
@@ -138,17 +140,16 @@ public class ColorChangeService {
                     pixels[i + 3] = (byte) newRed;
                 }
             }
-        }
-        else {
+        } else {
             System.out.println("Unsupported bufferedimage type!");
         }
     }
+
     private int scaleColor(int newColor, int currentColor, float avgColor) {
         int calculatedColor = (int) (newColor * currentColor / avgColor);
         if (calculatedColor > 255) {
             calculatedColor = 255;
-        }
-        else if (calculatedColor < 0) {
+        } else if (calculatedColor < 0) {
             calculatedColor = 0;
         }
         return calculatedColor;

@@ -77,7 +77,6 @@ public class ImageService {
     }
 
     public ResponseEntity<Object> getImageByEmailAndName(String email, String name) {
-        Map<String, String> response = new HashMap<>();
         try {
             Image image = imageRepo.getImageByEmailAndName(email, name);
             if (image == null) {
