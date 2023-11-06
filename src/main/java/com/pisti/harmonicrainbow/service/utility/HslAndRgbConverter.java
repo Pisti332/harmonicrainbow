@@ -52,15 +52,15 @@ public class HslAndRgbConverter {
         return HSL;
     }
 
-    public Map<String, Integer> convertHSLtoRGB(int hVal, int sVal, int lVal) {
+    public Map<String, Integer> convertHSLtoRGB(float hVal, float sVal, float lVal) {
         Map<String, Integer> RGB = new HashMap<>();
 
         float r, g, b, h, s, l;
         float temp1, temp2, tempr, tempg, tempb;
 
-        h = (float) (hVal % 260) / 360;
-        s = (float) sVal / 100;
-        l = (float) lVal / 100;
+        h = hVal % 260 / 360;
+        s = sVal / 100;
+        l = lVal / 100;
 
         if (s == 0) {
             r = l;

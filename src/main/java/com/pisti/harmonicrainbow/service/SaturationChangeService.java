@@ -1,5 +1,6 @@
 package com.pisti.harmonicrainbow.service;
 
+import com.pisti.harmonicrainbow.service.utility.HslAndRgbConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
@@ -19,10 +20,12 @@ import java.util.Map;
 @Service
 public class SaturationChangeService {
     private ImageService imageService;
+    private HslAndRgbConverter hslAndRgbConverter;
 
     @Autowired
-    public SaturationChangeService(ImageService imageService) {
+    public SaturationChangeService(ImageService imageService, HslAndRgbConverter hslAndRgbConverter) {
         this.imageService = imageService;
+        this.hslAndRgbConverter = hslAndRgbConverter;
     }
 
     public ResponseEntity<Object> changeSaturation(String email, String name, int saturation) {
@@ -96,47 +99,38 @@ public class SaturationChangeService {
     }
 
     private void mutateSaturation(byte[] colorValues, int imageType, int saturation) {
-        int absSaturation = Math.abs(saturation);
         if (imageType == BufferedImage.TYPE_3BYTE_BGR) {
             if (saturation < 0 && saturation >= -100) {
                 for (int i = 0; i < colorValues.length; i += 3) {
                     int red = Byte.toUnsignedInt(colorValues[i + 2]);
                     int green = Byte.toUnsignedInt(colorValues[i + 1]);
                     int blue = Byte.toUnsignedInt(colorValues[i]);
-                    int bw = (red + green + blue) / 3;
-                    int redDiff = bw - red;
-                    int greenDiff = bw - green;
-                    int blueDiff = bw - blue;
-                    float redPerPercent = (float) redDiff / 100;
-                    float greenPerPercent = (float) greenDiff / 100;
-                    float bluePerPercent = (float) blueDiff / 100;
-                    colorValues[i + 2] = (byte) (absSaturation * redPerPercent + red);
-                    colorValues[i + 1] = (byte) (absSaturation * greenPerPercent + green);
-                    colorValues[i] = (byte) (absSaturation * bluePerPercent + blue);
+
+                    Map<String, Float> hsl = hslAndRgbConverter.convertRGBtoHSL(red, green, blue);
+                    float newSaturation = hsl.get("s") - hsl.get("s") / 100 * saturation * -1;
+                    Map<String, Integer> rgb = hslAndRgbConverter.convertHSLtoRGB(hsl.get("h"),
+                            newSaturation,
+                            hsl.get("l"));
+
+                    colorValues[i + 2] = rgb.get("r").byteValue();
+                    colorValues[i + 1] = rgb.get("g").byteValue();
+                    colorValues[i] = rgb.get("b").byteValue();
                 }
             } else if (saturation > 0 && saturation <= 100) {
                 for (int i = 0; i < colorValues.length; i += 3) {
                     int red = Byte.toUnsignedInt(colorValues[i + 2]);
                     int green = Byte.toUnsignedInt(colorValues[i + 1]);
                     int blue = Byte.toUnsignedInt(colorValues[i]);
-                    int maxFromRedGreen = Math.max(red, green);
-                    int max = Math.max(blue, maxFromRedGreen);
-                    float maxDiff = (float) 255 / max - 1;
-                    float maxDiffPerPercent = maxDiff / 100;
 
-                    int brightness = red + green + blue;
+                    Map<String, Float> hsl = hslAndRgbConverter.convertRGBtoHSL(red, green, blue);
+                    float newSaturation = hsl.get("s") + (100 - hsl.get("s")) / 100 * saturation;
+                    Map<String, Integer> rgb = hslAndRgbConverter.convertHSLtoRGB(hsl.get("h"),
+                            newSaturation,
+                            hsl.get("l"));
 
-                    int newRed = (int) ((saturation * maxDiffPerPercent + 1) * red);
-                    int newGreen = (int) ((saturation * maxDiffPerPercent + 1) * green);
-                    int newBlue = (int) ((saturation * maxDiffPerPercent + 1) * blue);
-
-                    int newBrightness = newRed + newGreen + newBlue;
-
-                    int brightnessDiff = (newBrightness - brightness) / 3;
-
-                    colorValues[i + 2] = (byte) (Math.max(newRed - brightnessDiff, 0));
-                    colorValues[i + 1] = (byte) (Math.max(newGreen - brightnessDiff, 0));
-                    colorValues[i] = (byte) (Math.max(newBlue - brightnessDiff, 0));
+                    colorValues[i + 2] = rgb.get("r").byteValue();
+                    colorValues[i + 1] = rgb.get("g").byteValue();
+                    colorValues[i] = rgb.get("b").byteValue();
                 }
             }
         } else if (imageType == BufferedImage.TYPE_4BYTE_ABGR) {
@@ -145,41 +139,33 @@ public class SaturationChangeService {
                     int red = Byte.toUnsignedInt(colorValues[i + 3]);
                     int green = Byte.toUnsignedInt(colorValues[i + 2]);
                     int blue = Byte.toUnsignedInt(colorValues[i + 1]);
-                    int bw = (red + green + blue) / 3;
-                    int redDiff = bw - red;
-                    int greenDiff = bw - green;
-                    int blueDiff = bw - blue;
-                    float redPerPercent = (float) redDiff / 100;
-                    float greenPerPercent = (float) greenDiff / 100;
-                    float bluePerPercent = (float) blueDiff / 100;
-                    colorValues[i + 3] = (byte) (absSaturation * redPerPercent + red);
-                    colorValues[i + 2] = (byte) (absSaturation * greenPerPercent + green);
-                    colorValues[i + 1] = (byte) (absSaturation * bluePerPercent + blue);
+
+                    Map<String, Float> hsl = hslAndRgbConverter.convertRGBtoHSL(red, green, blue);
+                    float newSaturation = hsl.get("s") - hsl.get("s") / 100 * saturation * -1;
+                    Map<String, Integer> rgb = hslAndRgbConverter.convertHSLtoRGB(hsl.get("h"),
+                            newSaturation,
+                            hsl.get("l"));
+
+                    colorValues[i + 3] = rgb.get("r").byteValue();
+                    colorValues[i + 2] = rgb.get("g").byteValue();
+                    colorValues[i + 1] = rgb.get("b").byteValue();
                 }
+
             } else if (saturation > 0 && saturation <= 100) {
                 for (int i = 0; i < colorValues.length; i += 4) {
                     int red = Byte.toUnsignedInt(colorValues[i + 3]);
                     int green = Byte.toUnsignedInt(colorValues[i + 2]);
                     int blue = Byte.toUnsignedInt(colorValues[i + 1]);
-                    int max1 = Math.max(red, green);
-                    int max = Math.max(blue, max1);
 
-                    float maxDiff = (float) 255 / max - 1;
-                    float maxDiffPerPercent = maxDiff / 100;
+                    Map<String, Float> hsl = hslAndRgbConverter.convertRGBtoHSL(red, green, blue);
+                    float newSaturation = hsl.get("s") + (100 - hsl.get("s")) / 100 * saturation * -1;
+                    Map<String, Integer> rgb = hslAndRgbConverter.convertHSLtoRGB(hsl.get("h"),
+                            newSaturation,
+                            hsl.get("l"));
 
-                    int brightness = red + green + blue;
-
-                    int newRed = (int) ((saturation * maxDiffPerPercent + 1) * red);
-                    int newGreen = (int) ((saturation * maxDiffPerPercent + 1) * green);
-                    int newBlue = (int) ((saturation * maxDiffPerPercent + 1) * blue);
-
-                    int newBrightness = newRed + newGreen + newBlue;
-
-                    int brightnessDiff = (newBrightness - brightness) / 3;
-
-                    colorValues[i + 3] = (byte) (Math.max(newRed - brightnessDiff, 0));
-                    colorValues[i + 2] = (byte) (Math.max(newGreen - brightnessDiff, 0));
-                    colorValues[i + 1] = (byte) (Math.max(newBlue - brightnessDiff, 0));
+                    colorValues[i + 3] = rgb.get("r").byteValue();
+                    colorValues[i + 2] = rgb.get("g").byteValue();
+                    colorValues[i + 1] = rgb.get("b").byteValue();
                 }
             }
         } else {
