@@ -119,14 +119,24 @@ public class SaturationChangeService {
                     int red = Byte.toUnsignedInt(colorValues[i + 2]);
                     int green = Byte.toUnsignedInt(colorValues[i + 1]);
                     int blue = Byte.toUnsignedInt(colorValues[i]);
-                    int max1 = Math.max(red, green);
-                    int max = Math.max(blue, max1);
+                    int maxFromRedGreen = Math.max(red, green);
+                    int max = Math.max(blue, maxFromRedGreen);
                     float maxDiff = (float) 255 / max - 1;
                     float maxDiffPerPercent = maxDiff / 100;
 
-                    colorValues[i + 2] = (byte) ((saturation * maxDiffPerPercent + 1) * red);
-                    colorValues[i + 1] = (byte) ((saturation * maxDiffPerPercent + 1) * green);
-                    colorValues[i] = (byte) ((saturation * maxDiffPerPercent + 1) * blue);
+                    int brightness = red + green + blue;
+
+                    int newRed = (int) ((saturation * maxDiffPerPercent + 1) * red);
+                    int newGreen = (int) ((saturation * maxDiffPerPercent + 1) * green);
+                    int newBlue = (int) ((saturation * maxDiffPerPercent + 1) * blue);
+
+                    int newBrightness = newRed + newGreen + newBlue;
+
+                    int brightnessDiff = (newBrightness - brightness) / 3;
+
+                    colorValues[i + 2] = (byte) (Math.max(newRed - brightnessDiff, 0));
+                    colorValues[i + 1] = (byte) (Math.max(newGreen - brightnessDiff, 0));
+                    colorValues[i] = (byte) (Math.max(newBlue - brightnessDiff, 0));
                 }
             }
         } else if (imageType == BufferedImage.TYPE_4BYTE_ABGR) {
@@ -153,12 +163,23 @@ public class SaturationChangeService {
                     int blue = Byte.toUnsignedInt(colorValues[i + 1]);
                     int max1 = Math.max(red, green);
                     int max = Math.max(blue, max1);
+
                     float maxDiff = (float) 255 / max - 1;
                     float maxDiffPerPercent = maxDiff / 100;
 
-                    colorValues[i + 3] = (byte) ((saturation * maxDiffPerPercent + 1) * red);
-                    colorValues[i + 2] = (byte) ((saturation * maxDiffPerPercent + 1) * green);
-                    colorValues[i + 1] = (byte) ((saturation * maxDiffPerPercent + 1) * blue);
+                    int brightness = red + green + blue;
+
+                    int newRed = (int) ((saturation * maxDiffPerPercent + 1) * red);
+                    int newGreen = (int) ((saturation * maxDiffPerPercent + 1) * green);
+                    int newBlue = (int) ((saturation * maxDiffPerPercent + 1) * blue);
+
+                    int newBrightness = newRed + newGreen + newBlue;
+
+                    int brightnessDiff = (newBrightness - brightness) / 3;
+
+                    colorValues[i + 3] = (byte) (Math.max(newRed - brightnessDiff, 0));
+                    colorValues[i + 2] = (byte) (Math.max(newGreen - brightnessDiff, 0));
+                    colorValues[i + 1] = (byte) (Math.max(newBlue - brightnessDiff, 0));
                 }
             }
         } else {
