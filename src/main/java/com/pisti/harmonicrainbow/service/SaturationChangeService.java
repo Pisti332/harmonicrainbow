@@ -128,6 +128,7 @@ public class SaturationChangeService {
                             newSaturation,
                             hsl.get("l"));
 
+
                     colorValues[i + 2] = rgb.get("r").byteValue();
                     colorValues[i + 1] = rgb.get("g").byteValue();
                     colorValues[i] = rgb.get("b").byteValue();

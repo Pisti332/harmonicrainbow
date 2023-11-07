@@ -58,7 +58,8 @@ public class HslAndRgbConverter {
         float r, g, b, h, s, l;
         float temp1, temp2, tempr, tempg, tempb;
 
-        h = hVal % 260 / 360;
+//        h = hVal % 260 / 360;
+        h = hVal / 360;
         s = sVal / 100;
         l = lVal / 100;
 
