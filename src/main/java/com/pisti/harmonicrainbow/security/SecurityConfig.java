@@ -35,7 +35,15 @@ public class SecurityConfig {
                                     "api/user/confirmtoken",
                                     "/static/**",
                                     "/confirmFailedHtml.html",
-                                    "confirmSuccessfulHtml.html").permitAll()
+                                    "confirmSuccessfulHtml.html",
+                                    "index.html",
+                                    "assets/img/*",
+                                    "favicon.ico",
+                                    "index.html",
+                                    "main-ZMSIL2PP.js",
+                                    "polyfills-LZBJRJJE.js",
+                                    "styles-3JZCYRXB.css"
+                                    ).permitAll()
                             .anyRequest().authenticated();
                 })
                 .sessionManagement(
