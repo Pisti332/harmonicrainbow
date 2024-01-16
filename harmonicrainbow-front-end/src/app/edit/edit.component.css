@@ -1,0 +1,23 @@
+#edit-root, #color-change-input-block {
+    position: absolute;
+    z-index: 2;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50vw;
+    height: 50vh;
+}
+p {
+    flex: 0.1;
+    backdrop-filter: blur(3px);
+    letter-spacing: 2px;
+    justify-self: center;
+    font-weight: 400;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 3vh;
+    padding: 3vh;
+    color: white;
+}
+#color-change-input-block {
+    z-index: 4;
+}

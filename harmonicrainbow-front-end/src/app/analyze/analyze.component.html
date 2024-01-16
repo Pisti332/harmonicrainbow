@@ -1,0 +1,6 @@
+<div class="analyze">
+    <p class="analyze" id="brg" (click)="getBrightness()">GET BRIGHTNESS</p>
+    <p *ngIf="brightness" class="analyze" id="brg" (click)="getBrightness()">{{brightness}}</p>
+    <p class="analyze" id="col" (click)="getColorComposition()">GET COLOR COMPOSITION</p>
+    <p *ngIf="colorComposition">{{colorComposition}}</p>
+</div>
