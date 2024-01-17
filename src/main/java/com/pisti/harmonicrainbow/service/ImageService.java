@@ -24,10 +24,10 @@ import java.util.*;
 
 @Service
 public class ImageService {
-    private ImageRepo imageRepo;
-    private ImageNameConverter imageNameConverter;
-    private ImageResizer imageResizer;
-    private ImageReader imageReader;
+    private final ImageRepo imageRepo;
+    private final ImageNameConverter imageNameConverter;
+    private final ImageResizer imageResizer;
+    private final ImageReader imageReader;
     private final String UPLOAD_DIRECTORY = System.getenv("UPLOAD_DIRECTORY");
 
     @Autowired
