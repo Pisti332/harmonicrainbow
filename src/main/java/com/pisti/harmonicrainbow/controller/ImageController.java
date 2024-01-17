@@ -2,7 +2,6 @@ package com.pisti.harmonicrainbow.controller;
 
 
 import com.pisti.harmonicrainbow.service.ImageService;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

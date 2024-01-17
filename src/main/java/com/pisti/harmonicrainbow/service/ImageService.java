@@ -2,7 +2,6 @@ package com.pisti.harmonicrainbow.service;
 
 import com.pisti.harmonicrainbow.model.Image;
 import com.pisti.harmonicrainbow.repository.ImageRepo;
-import com.pisti.harmonicrainbow.service.user.TokenService;
 import com.pisti.harmonicrainbow.service.utility.ImageNameConverter;
 import com.pisti.harmonicrainbow.service.utility.ImageReader;
 import com.pisti.harmonicrainbow.service.utility.ImageResizer;
