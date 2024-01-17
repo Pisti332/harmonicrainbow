@@ -1,7 +1,6 @@
 package com.pisti.harmonicrainbow.service.user;
 
 import com.pisti.harmonicrainbow.model.DTOS.SignupForm;
-import com.pisti.harmonicrainbow.repository.UsersRepo;
 import com.pisti.harmonicrainbow.security.JWTService;
 import com.pisti.harmonicrainbow.security.MyUserDetailsService;
 import com.pisti.harmonicrainbow.service.utility.Validator;
@@ -21,16 +20,14 @@ import java.util.Map;
 
 @Service
 public class SigninService {
-    private UsersRepo usersRepo;
     private final AuthenticationManager authenticationManager;
     private final JWTService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final MyUserDetailsService myUserDetailsService;
 
     @Autowired
-    public SigninService(UsersRepo usersRepo, AuthenticationManager authenticationManager,
+    public SigninService(AuthenticationManager authenticationManager,
                          JWTService jwtService, PasswordEncoder passwordEncoder, MyUserDetailsService myUserDetailsService) {
-        this.usersRepo = usersRepo;
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
         this.passwordEncoder = passwordEncoder;
