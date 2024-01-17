@@ -15,7 +15,7 @@
   </a>
 
   <p align="center">
-  <h3>Do you need to extract data from images for your application or edit an image? You are at the right place! HARMONICRAINBOW is an API offering numerous aspects of image analyzation.</h3>
+  <h3>Do you need to extract data from images or edit an image? You are at the right place! HARMONICRAINBOW is a full stack application offering numerous aspects of image analyzation and editing.</h3>
     <br />
     <a href="https://github.com/Pisti332/harmonicrainbow"><strong>Explore the docs »</strong></a>
     <br />
@@ -63,7 +63,7 @@
 
 ### Built With
 
-This section should list any major frameworks/libraries used to bootstrap the project.
+This section lists any major technologies used in the project.
 
 * [![SpringBoot][Spring]][spring-url]
 * [![PostgreSQL][PostgreSQL]][postrgesql-url]
@@ -82,8 +82,8 @@ This section should list any major frameworks/libraries used to bootstrap the pr
 
 
 ### Prerequisites
-  * download docker desktop from <a href="https://www.docker.com/products/docker-desktop">https://www.docker.com/products/docker-desktop/</a>
-  * set up git: <a href="https://git-scm.com/downloads">https://git-scm.com/downloads</a>
+  * download docker desktop from <a href="https://www.docker.com/products/docker-desktop">https://www.docker.com/products/docker-desktop/
+  * set up git: <a href="https://git-scm.com/downloads">https://git-scm.com/downloads
 
 ### Installation
 
