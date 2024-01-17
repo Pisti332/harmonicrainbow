@@ -56,7 +56,7 @@
 
 <!-- ABOUT THE PROJECT -->
 ## Preview
-
+### Endpoints:
 [![Product Name Screen Shot][product-screenshot]](https://github.com/Pisti332/harmonicrainbow/tree/color-change-service)
 
 
@@ -142,8 +142,6 @@ Don't forget to give the project a star! Thanks again!
 ## Contact
 
 Varga Istvan - <a href="https://www.linkedin.com/feed/">Linkedin</a> - varga.istvan.p1@gmail.com
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
