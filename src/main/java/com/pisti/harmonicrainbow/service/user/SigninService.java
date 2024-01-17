@@ -43,8 +43,6 @@ public class SigninService {
         }
 
         response.put("reason", "no user with this email and password combination");
-        System.out.println(signupForm.email());
-        System.out.println(passwordEncoder.encode(signupForm.password()));
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(signupForm.email(), signupForm.password())
         );
