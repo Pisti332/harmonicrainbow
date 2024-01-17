@@ -1,0 +1,49 @@
+.login-root {
+    position: absolute;
+    z-index: 2;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50vw;
+    height: 50vh;
+}
+.login-form {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    backdrop-filter: blur(3px);
+    justify-content: center;
+}
+.login-form > input, button {
+    margin-inline: 16%;
+    flex: 0.1;
+    border: 0.1vh;
+    border-style: solid;
+    letter-spacing: 2px;
+    justify-self: center;
+}
+.login-form > button {
+    background-color: rgb(195, 98, 65);
+    cursor: pointer;
+}
+.login-form > input {
+    text-indent: 10px;
+}
+.invalid-popup {
+    z-index: 2;
+    color: rgb(195, 98, 65);
+    font-weight: 800;
+    font-family: 'Courier New', Courier, monospace;
+    margin-left: auto;
+    margin-right: 0;
+    font-size: 3vh;
+    margin-right: auto;
+    margin-left: 0;
+    margin-inline: 16%;
+    text-align: center;
+    backdrop-filter: blur(3px);
+
+}
+/* .fade-out {
+    opacity: 0;
+  } */

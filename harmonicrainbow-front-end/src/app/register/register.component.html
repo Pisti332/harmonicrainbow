@@ -1,0 +1,10 @@
+<div class="register-root">
+    <form class="register-form" [formGroup]="applyForm" (submit)="onSubmit()">
+        <input placeholder="email.address@gmail.com" type="email" id="email1" formControlName="email" class="register"><br>
+        <input placeholder="password" type="password" id="password" formControlName="password" class="register"><br>
+        <input placeholder="password again" type="password" id="password2" formControlName="password2" class="register"><br>
+        <button type="submit" id="submit" name="submit" class="register">REGISTER</button>
+    </form>
+    <p id="invalidCredentialsPopup" *ngIf="invalidCredentialsPopup" class="invalid-popup">INVALID CREDENTIALS</p>
+
+</div>

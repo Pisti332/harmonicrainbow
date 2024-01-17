@@ -1,0 +1,41 @@
+<div id="edit-root">
+    <p (click)="getBlackAndWhite()">BLACK&WHITE</p>
+    <p (click)="openSaturation()">SATURATION</p>
+    <div *ngIf="saturationMenu">
+        <input [(ngModel)]="saturation" min="-100" max="100" id="saturationInput" type="range">
+        <p id="saturationValue">{{saturation}}</p>
+        <button (click)="getSaturationChangedImage()">CHANGE SATURATION</button>
+    </div>
+    <p (click)="showColorChange()">COLOR RANGE CHANGE</p>
+    <div id="color-change-input-block" *ngIf="colorChange">
+        <div id="from">
+            <p>From</p>
+            <label for="red">Red</label>
+            <input id="red" name="red">
+            <label for="green">Green</label>
+            <input id="green" name="green">
+            <label for="blue">Blue</label>
+            <input id="blue" name="blue">
+        </div>
+        <div id="to">
+            <p>To</p>
+            <label for="red">Red</label>
+            <input id="red" name="red">
+            <label for="green">Green</label>
+            <input id="green" name="green">
+            <label for="blue">Blue</label>
+            <input id="blue" name="blue">
+        </div>
+        <div id="newColor">
+            <p>New Color</p>
+            <label for="red">Red</label>
+            <input id="red" name="red">
+            <label for="green">Green</label>
+            <input id="green" name="green">
+            <label for="blue">Blue</label>
+            <input id="blue" name="blue">
+        </div>
+        <button (click)="changeColorRange()">CHANGE COLOR RANGE</button>
+    </div>
+
+</div>

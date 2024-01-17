@@ -1,0 +1,20 @@
+<div class="app" id="app-root">
+  <nav class="app" id="app-nav" *ngIf="!login && !register">
+    <img class="app" id="logo" src="assets\img\logo.png">
+    <p class="app" (click)="setDescription('about')">ABOUT</p>
+    <p class="app" (click)="setDescription('analyze')">ANALYZE</p>
+    <p class="app" (click)="setDescription('edit')">EDIT</p>
+    <p *ngIf="!isLoggedIn" class="app" (click)="setDescription(null)" (click)="triggerRegister()">REGISTER</p>
+    <p *ngIf="!isLoggedIn" class="app" (click)="setDescription(null)" (click)="triggerLogin()">LOGIN</p>
+    <input type="file" requiredFileType="image/png" *ngIf="isLoggedIn" class="app" (change)="uploadImage($event)">
+    <p *ngIf="isLoggedIn" class="app" (click)="disableWorkbenches()" (click)="logout()">LOGOUT</p>
+  </nav>
+  <app-analyze [token]="token" [email]="email" [nameOfImage]="currentImageName" *ngIf="isAnalyzeWorkbench"></app-analyze>
+  <app-edit [image]="blob" (imageChange)="updateImage($event)" [token]="token" [email]="email" [nameOfImage]="currentImageName" *ngIf="isEditWorkbench"></app-edit>
+  <img class="app" id="current-image" (click)="hidePopUps()" (click)="setDescription(null)" (click)="disableWorkbenches()" [src]=currentImageURL>
+  <p class="arrow" id="arrow-left" *ngIf="isLoggedIn" (click)="changeImages('L')">L</p>
+  <p class="arrow" id="arrow-right" *ngIf="isLoggedIn" (click)="changeImages('R')">R</p>
+  <app-login (isLoggedInEvent)="setIsLoggedIn($event)" (loginEvent)="disableLogin()" (tokenEvent)="setToken($event)" (emailEvent)="setEmail($event)" (imagesEvent)="setImages($event)" class="app" *ngIf="login"></app-login>
+  <app-register class="app" *ngIf="register"></app-register>
+  <app-description [descriptionState] = "descriptionState" *ngIf="descriptionState"></app-description>
+</div>

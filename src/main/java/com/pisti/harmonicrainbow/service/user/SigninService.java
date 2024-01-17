@@ -1,12 +1,9 @@
 package com.pisti.harmonicrainbow.service.user;
 
-import com.pisti.harmonicrainbow.model.User;
 import com.pisti.harmonicrainbow.model.DTOS.SignupForm;
-import com.pisti.harmonicrainbow.repository.UsersRepo;
 import com.pisti.harmonicrainbow.security.JWTService;
 import com.pisti.harmonicrainbow.security.MyUserDetailsService;
 import com.pisti.harmonicrainbow.service.utility.Validator;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,22 +17,17 @@ import org.springframework.util.MultiValueMap;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 @Service
 public class SigninService {
-    private UsersRepo usersRepo;
-    private TokenService tokenService;
     private final AuthenticationManager authenticationManager;
     private final JWTService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final MyUserDetailsService myUserDetailsService;
 
     @Autowired
-    public SigninService(UsersRepo usersRepo, TokenService tokenService, AuthenticationManager authenticationManager,
+    public SigninService(AuthenticationManager authenticationManager,
                          JWTService jwtService, PasswordEncoder passwordEncoder, MyUserDetailsService myUserDetailsService) {
-        this.usersRepo = usersRepo;
-        this.tokenService = tokenService;
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
         this.passwordEncoder = passwordEncoder;
@@ -51,8 +43,6 @@ public class SigninService {
         }
 
         response.put("reason", "no user with this email and password combination");
-        System.out.println(signupForm.email());
-        System.out.println(passwordEncoder.encode(signupForm.password()));
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(signupForm.email(), signupForm.password())
         );

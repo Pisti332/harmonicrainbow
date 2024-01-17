@@ -1,0 +1,45 @@
+#app-nav {
+    display: grid;
+    align-items: center;
+    column-gap: 0vw;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    position: fixed;
+    backdrop-filter: blur(3px);
+    width: 100vw;
+}
+#logo {
+    width: 10vw;
+    margin: 0vw;
+    padding: 1vw;
+    justify-self: left;
+}
+p {
+    justify-self: center;
+    font-family: serif;
+    font-size: 1vw;
+    font-weight: bold;
+    cursor: pointer;
+}
+#current-image {
+    height: 100vh;
+    width: 100vw;
+    object-fit: cover;
+}
+.app {
+    display: flex;
+    /* justify-content: center;
+    align-items: center; */
+}
+.arrow {
+    position: absolute;
+    font-size: 2vw;
+    z-index: 5;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+#arrow-left {
+    left: 5%;
+}
+#arrow-right {
+    left: 95%;
+}
