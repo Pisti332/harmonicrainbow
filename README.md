@@ -1,23 +1,3 @@
-<!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
-<a name="readme-top"></a>
-<!--
-*** Thanks for checking out the Best-README-Template. If you have a suggestion
-*** that would make this better, please fork the repo and create a pull request
-*** or simply open an issue with the tag "enhancement".
-*** Don't forget to give the project a star!
-*** Thanks again! Now go create something AMAZING! :D
--->
-
-
-
-<!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
--->
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
@@ -88,6 +68,8 @@ This section should list any major frameworks/libraries used to bootstrap the pr
 * [![SpringBoot][Spring]][spring-url]
 * [![PostgreSQL][PostgreSQL]][postrgesql-url]
 * [![Docker][Docker]][docker-url]
+* [![Angular][Angular]][angular-url]
+* [![Typescript][Typescript]][typescript-url]
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -118,8 +100,7 @@ This section should list any major frameworks/libraries used to bootstrap the pr
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-You have to have something like <a href="https://www.postman.com/">Postman</a> to access the endpoints. The endpoint documentaion can be seen in the ```Preview``` section.
-
+First you need to register by clicking the register button. After you confirm your email address, you can log in. The navigation bar should be self explanatory on the top of the page. You can navigate between Your images with the "L" and "R" letters on the side.
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- ROADMAP -->
@@ -128,8 +109,9 @@ You have to have something like <a href="https://www.postman.com/">Postman</a> t
 - [x] Set up user database and endpoints.
 - [x] Set up image database and endpoints.
 - [x] Create image processor services.
-- [ ] Create brightness analytics service.
-- [ ] Create color composition analytics service.
+- [x] Create brightness analytics service.
+- [x] Create color composition analytics service.
+- [x] Create image pagination.
 
 See the [open issues](https://github.com/Pisti332/harmonicrainbow/issues) for a full list of proposed features (and known issues).
 
@@ -188,4 +170,9 @@ Varga Istvan - <a href="https://www.linkedin.com/feed/">Linkedin</a> - varga.ist
 [postrgesql-url]: https://www.postgresql.org/
 [Docker]: https://img.shields.io/badge/docker-20232A?style=for-the-badge&logo=docker&logoColor=#008000
 [docker-url]: https://www.docker.com/
+[Angular]: https://img.shields.io/badge/angular-20232A?style=for-the-badge&logo=angular&logoColor=#008000
+[angular-url]: https://angular.io/
+[Typescript]: https://img.shields.io/badge/typescript-20232A?style=for-the-badge&logo=typescript&logoColor=#008000
+[typescript-url]: https://www.typescriptlang.org/
+
 
