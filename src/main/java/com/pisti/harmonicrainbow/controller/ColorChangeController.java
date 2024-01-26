@@ -1,9 +1,7 @@
 package com.pisti.harmonicrainbow.controller;
 
 import com.pisti.harmonicrainbow.service.ColorChangeService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

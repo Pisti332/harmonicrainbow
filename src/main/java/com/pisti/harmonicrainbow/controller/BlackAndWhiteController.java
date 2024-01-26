@@ -1,7 +1,6 @@
 package com.pisti.harmonicrainbow.controller;
 
 import com.pisti.harmonicrainbow.service.BlackAndWhiteService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

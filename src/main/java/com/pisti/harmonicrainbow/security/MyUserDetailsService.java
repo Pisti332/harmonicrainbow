@@ -1,7 +1,6 @@
 package com.pisti.harmonicrainbow.security;
 
 import com.pisti.harmonicrainbow.repository.UsersRepo;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
