@@ -1,6 +1,7 @@
 package com.pisti.harmonicrainbow.service;
 
 import com.pisti.harmonicrainbow.service.utility.HslAndRgbConverter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
@@ -18,15 +19,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class SaturationChangeService {
-    private ImageService imageService;
-    private HslAndRgbConverter hslAndRgbConverter;
-
-    @Autowired
-    public SaturationChangeService(ImageService imageService, HslAndRgbConverter hslAndRgbConverter) {
-        this.imageService = imageService;
-        this.hslAndRgbConverter = hslAndRgbConverter;
-    }
+    private final ImageService imageService;
+    private final HslAndRgbConverter hslAndRgbConverter;
 
     public ResponseEntity<Object> changeSaturation(String email, String name, int saturation) {
         if (saturation > 100 || saturation < -100) {

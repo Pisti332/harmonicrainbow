@@ -1,5 +1,6 @@
 package com.pisti.harmonicrainbow.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
@@ -14,13 +15,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class ColorCompositionService {
     private final ImageService imageService;
-
-    @Autowired
-    public ColorCompositionService(ImageService imageService) {
-        this.imageService = imageService;
-    }
 
     public ResponseEntity<Object> getColorComposition(String email, String name) {
         ResponseEntity<Object> imageResponse = imageService.getImageByEmailAndName(email, name);

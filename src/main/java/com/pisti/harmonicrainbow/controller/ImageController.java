@@ -2,6 +2,8 @@ package com.pisti.harmonicrainbow.controller;
 
 
 import com.pisti.harmonicrainbow.service.ImageService;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -12,13 +14,10 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("api/image")
+@RequiredArgsConstructor
 public class ImageController {
     private final ImageService imageService;
 
-    @Autowired
-    public ImageController(ImageService imageService) {
-        this.imageService = imageService;
-    }
     @PostMapping
     public ResponseEntity<Object> uploadImage(@RequestParam("image") MultipartFile file, @RequestParam("email") String email) throws IOException {
         return imageService.uploadImage(file, email);

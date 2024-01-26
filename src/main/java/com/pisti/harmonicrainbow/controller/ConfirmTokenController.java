@@ -1,5 +1,7 @@
 package com.pisti.harmonicrainbow.controller;
 import com.pisti.harmonicrainbow.service.user.SignupService;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,12 +12,9 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("api/user/confirmtoken")
+@RequiredArgsConstructor
 public class ConfirmTokenController {
-    SignupService signupService;
-    @Autowired
-    public ConfirmTokenController(SignupService signupService) {
-        this.signupService = signupService;
-    }
+    private final SignupService signupService;
 
     @GetMapping
     public String confirmEmail(@RequestParam String token) {

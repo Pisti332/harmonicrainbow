@@ -1,5 +1,6 @@
 package com.pisti.harmonicrainbow.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,12 +14,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class BrightnessAnalyticsService {
     private final ImageService imageService;
-
-    public BrightnessAnalyticsService(ImageService imageService) {
-        this.imageService = imageService;
-    }
 
     public ResponseEntity<Object> getBrightness(String email, String name) {
         ResponseEntity<Object> imageResponse = imageService.getImageByEmailAndName(email, name);

@@ -1,6 +1,8 @@
 package com.pisti.harmonicrainbow.controller;
 
 import com.pisti.harmonicrainbow.service.ColorCompositionService;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,13 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("api/analytics")
+@RequiredArgsConstructor
 public class ColorCompositionAnalyticsController {
-    private ColorCompositionService colorCompositionService;
-
-    @Autowired
-    public ColorCompositionAnalyticsController(ColorCompositionService colorCompositionService) {
-        this.colorCompositionService = colorCompositionService;
-    }
+    private final ColorCompositionService colorCompositionService;
 
     @GetMapping("color-composition")
     public ResponseEntity<Object> getColorComposition(@RequestParam String email, @RequestParam String name) {

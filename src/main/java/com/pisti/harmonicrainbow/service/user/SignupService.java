@@ -4,6 +4,7 @@ import com.pisti.harmonicrainbow.model.User;
 import com.pisti.harmonicrainbow.model.DTOS.SignupForm;
 import com.pisti.harmonicrainbow.repository.UsersRepo;
 import com.pisti.harmonicrainbow.service.utility.Validator;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,9 +14,10 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class SignupService {
-    private UsersRepo usersRepo;
-    private EmailSenderService emailSenderService;
+    private final UsersRepo usersRepo;
+    private final EmailSenderService emailSenderService;
     private final PasswordEncoder passwordEncoder;
     private static final String EMAIL_ADDRESS = "harmonicrainbow7@gmail.com";
     private static final String DOMAIN = System.getenv("IPV4");
@@ -29,13 +31,6 @@ public class SignupService {
             this.MESSAGE = MESSAGE;
             this.PASSWORD_VALIDATOR_REGEX = PASSWORD_VALIDATOR_REGEX;
         }
-    }
-
-    @Autowired
-    public SignupService(UsersRepo usersRepo, EmailSenderService emailSenderService, PasswordEncoder passwordEncoder) {
-        this.usersRepo = usersRepo;
-        this.emailSenderService = emailSenderService;
-        this.passwordEncoder = passwordEncoder;
     }
     private boolean validatePassword(String password) {
         return password.matches(PasswordValidator.VERSION1.PASSWORD_VALIDATOR_REGEX);

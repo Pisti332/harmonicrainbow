@@ -1,6 +1,8 @@
 package com.pisti.harmonicrainbow.controller;
 
 import com.pisti.harmonicrainbow.service.ColorChangeService;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -10,11 +12,8 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("api/service")
+@RequiredArgsConstructor
 public class ColorChangeController {
-    @Autowired
-    public ColorChangeController(ColorChangeService colorChangeService) {
-        this.colorChangeService = colorChangeService;
-    }
 
     private final ColorChangeService colorChangeService;
     @PostMapping(path = "change-color", produces = MediaType.IMAGE_JPEG_VALUE)

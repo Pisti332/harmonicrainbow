@@ -3,21 +3,18 @@ package com.pisti.harmonicrainbow.controller;
 import com.pisti.harmonicrainbow.service.user.SigninService;
 import com.pisti.harmonicrainbow.service.user.SignupService;
 import com.pisti.harmonicrainbow.model.DTOS.SignupForm;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/user")
+@RequiredArgsConstructor
 public class UserController {
     private final SignupService signupService;
     private final SigninService signinService;
-
-    @Autowired
-    public UserController(SignupService signupService, SigninService signinService) {
-        this.signupService = signupService;
-        this.signinService = signinService;
-    }
 
     @PostMapping("signup")
     public ResponseEntity<Object> signupUser(@RequestBody SignupForm signupForm) {

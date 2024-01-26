@@ -1,10 +1,12 @@
 package com.pisti.harmonicrainbow.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -16,13 +18,9 @@ import java.io.IOException;
 import java.util.HashMap;
 
 @Service
+@RequiredArgsConstructor
 public class BlackAndWhiteService {
-    private ImageService imageService;
-
-    @Autowired
-    public BlackAndWhiteService(ImageService imageService) {
-        this.imageService = imageService;
-    }
+    private final ImageService imageService;
 
     public ResponseEntity<Object> getBlackAndWhite(String email, String name) {
         ResponseEntity<Object> imageResponse = imageService.getImageByEmailAndName(email, name);

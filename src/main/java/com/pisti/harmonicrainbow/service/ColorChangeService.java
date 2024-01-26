@@ -1,5 +1,6 @@
 package com.pisti.harmonicrainbow.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
@@ -13,13 +14,9 @@ import java.io.IOException;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class ColorChangeService {
-    private ImageService imageService;
-
-    @Autowired
-    public ColorChangeService(ImageService imageService) {
-        this.imageService = imageService;
-    }
+    private final ImageService imageService;
 
     public ResponseEntity<Object> changeColors(Map<String, Map<String, Integer>> body, String email, String name) {
         System.out.println(body.toString());

@@ -5,6 +5,7 @@ import com.pisti.harmonicrainbow.repository.ImageRepo;
 import com.pisti.harmonicrainbow.service.utility.ImageNameConverter;
 import com.pisti.harmonicrainbow.service.utility.ImageReader;
 import com.pisti.harmonicrainbow.service.utility.ImageResizer;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
@@ -23,20 +24,13 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class ImageService {
     private final ImageRepo imageRepo;
     private final ImageNameConverter imageNameConverter;
     private final ImageResizer imageResizer;
     private final ImageReader imageReader;
     private final String UPLOAD_DIRECTORY = System.getenv("UPLOAD_DIRECTORY");
-
-    @Autowired
-    public ImageService(ImageRepo imageRepo, ImageNameConverter imageNameConverter, ImageResizer imageResizer, ImageReader imageReader) {
-        this.imageRepo = imageRepo;
-        this.imageNameConverter = imageNameConverter;
-        this.imageResizer = imageResizer;
-        this.imageReader = imageReader;
-    }
 
     public ResponseEntity<Object> uploadImage(MultipartFile file, String email) throws IOException {
         Map<String, String> response = new HashMap<>();
