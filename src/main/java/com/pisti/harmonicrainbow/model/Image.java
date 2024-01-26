@@ -28,4 +28,7 @@ public class Image {
     private String name;
     @Column(nullable = false)
     private String format;
+    @ManyToOne
+    @JoinColumn(name = "userId")
+    private User user;
 }

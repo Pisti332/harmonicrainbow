@@ -1,7 +1,10 @@
 package com.pisti.harmonicrainbow.service;
 
 import com.pisti.harmonicrainbow.model.Image;
+import com.pisti.harmonicrainbow.model.User;
 import com.pisti.harmonicrainbow.repository.ImageRepo;
+import com.pisti.harmonicrainbow.repository.UsersRepo;
+import com.pisti.harmonicrainbow.service.user.SigninService;
 import com.pisti.harmonicrainbow.service.utility.ImageNameConverter;
 import com.pisti.harmonicrainbow.service.utility.ImageReader;
 import com.pisti.harmonicrainbow.service.utility.ImageResizer;
@@ -29,6 +32,7 @@ public class ImageService {
     private final ImageNameConverter imageNameConverter;
     private final ImageResizer imageResizer;
     private final ImageReader imageReader;
+    private final UsersRepo usersRepo;
     private final String UPLOAD_DIRECTORY = System.getenv("UPLOAD_DIRECTORY");
 
     public ResponseEntity<Object> uploadImage(MultipartFile file, String email) throws IOException {
@@ -44,6 +48,8 @@ public class ImageService {
         String imageName = file.getOriginalFilename();
         Map<String, String> imageMetadata = imageNameConverter.convertImageNameToNameAndFormat(imageName);
 
+        User user = usersRepo.findByEmail(email);
+
         Image imageEntity = Image
                 .builder()
                 .name(imageMetadata.get("name"))
@@ -51,6 +57,7 @@ public class ImageService {
                 .email(email)
                 .image48Px(smallerImage)
                 .upload_time(LocalDateTime.now())
+                .user(user)
                 .build();
 
         imageRepo.save(imageEntity);
