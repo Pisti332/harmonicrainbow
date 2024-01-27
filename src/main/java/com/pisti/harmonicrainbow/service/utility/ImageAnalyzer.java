@@ -13,8 +13,10 @@ public class ImageAnalyzer {
     private final int[] bandOffsets;
     private final int width;
     private final int height;
+    private final BufferedImage bufferedImage;
 
     public ImageAnalyzer(BufferedImage bufferedImage) {
+        this.bufferedImage = bufferedImage;
         this.imageType = bufferedImage.getType();
         this.width = bufferedImage.getWidth();
         this.height = bufferedImage.getHeight();
@@ -36,7 +38,7 @@ public class ImageAnalyzer {
         }
     }
 
-    public byte[] getColorValues(BufferedImage image) throws IOException {
-        return ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
+    public byte[] getColorValues() throws IOException {
+        return ((DataBufferByte) this.bufferedImage.getRaster().getDataBuffer()).getData();
     }
 }

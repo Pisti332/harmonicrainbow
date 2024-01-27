@@ -38,7 +38,7 @@ public class ColorChangeService {
                 BufferedImage bufferedImage = ImageIO.read(image.getInputStream());
 
                 ImageAnalyzer imageAnalyzer = new ImageAnalyzer(bufferedImage);
-                byte[] colorValues = imageAnalyzer.getColorValues(bufferedImage);
+                byte[] colorValues = imageAnalyzer.getColorValues();
                 int width = imageAnalyzer.getWidth();
                 int height = imageAnalyzer.getHeight();
                 int[] bandOffsets = imageAnalyzer.getBandOffsets();
