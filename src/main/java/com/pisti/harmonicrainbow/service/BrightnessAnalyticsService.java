@@ -23,6 +23,7 @@ public class BrightnessAnalyticsService {
         if (imageResponse.getStatusCode() == HttpStatus.OK) {
             try {
                 ByteArrayResource image = (ByteArrayResource) imageResponse.getBody();
+                assert image != null;
                 BufferedImage bufferedImage = ImageIO.read(image.getInputStream());
                 byte[] pixels = ((DataBufferByte) bufferedImage.getRaster().getDataBuffer()).getData();
                 int brightness = getBrightness(pixels);
