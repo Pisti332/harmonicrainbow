@@ -21,7 +21,7 @@ public class BlackAndWhiteService {
     private final ImageInitializer imageInitializer;
     private final ImageConverter imageConverter;
 
-    public ResponseEntity<Object> getBlackAndWhite(String email, String name) {
+    public ByteArrayResource getBlackAndWhite(String email, String name) {
         ResponseEntity<Object> imageResponse = imageService.getImageByEmailAndName(email, name);
         if (imageResponse.getStatusCode() == HttpStatus.OK) {
             try {
@@ -42,17 +42,13 @@ public class BlackAndWhiteService {
                 BufferedImage newImage =
                         imageInitializer.initializeImage(colorValues, width, height, bandOffsets, type);
 
-                ByteArrayResource inputStream = imageConverter.convertImage(newImage, formatName);
+                return imageConverter.convertImage(newImage, formatName);
 
-                return ResponseEntity
-                        .status(HttpStatus.OK)
-                        .contentLength(inputStream.contentLength())
-                        .body(inputStream);
             } catch (IOException e) {
-                return new ResponseEntity<>(new HashMap<>(), HttpStatus.BAD_REQUEST);
+                return null;
             }
         } else {
-            return imageResponse;
+            return null;
         }
     }
 
