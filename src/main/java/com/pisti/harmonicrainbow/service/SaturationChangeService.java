@@ -24,11 +24,9 @@ public class SaturationChangeService {
     private final ImageInitializer imageInitializer;
     private final ImageConverter imageConverter;
 
-    public ResponseEntity<Object> changeSaturation(String email, String name, int saturation) {
+    public ByteArrayResource changeSaturation(String email, String name, int saturation) {
         if (saturation > 100 || saturation < -100) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body("");
+            return null;
         }
         ResponseEntity<Object> imageResponse = imageService.getImageByEmailAndName(email, name);
         if (imageResponse.getStatusCode() == HttpStatus.OK) {
@@ -50,16 +48,12 @@ public class SaturationChangeService {
                 BufferedImage newImage =
                         imageInitializer.initializeImage(colorValues, width, height, bandOffsets, type);
 
-                ByteArrayResource inputStream = imageConverter.convertImage(newImage, formatName);
-                return ResponseEntity
-                        .status(HttpStatus.OK)
-                        .contentLength(inputStream.contentLength())
-                        .body(inputStream);
+                return imageConverter.convertImage(newImage, formatName);
             } catch (IOException e) {
-                return new ResponseEntity<>(new HashMap<>(), HttpStatus.BAD_REQUEST);
+                return null;
             }
         } else {
-            return imageResponse;
+            return null;
         }
     }
 

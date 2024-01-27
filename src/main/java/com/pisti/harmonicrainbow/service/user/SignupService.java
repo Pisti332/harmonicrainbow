@@ -47,22 +47,22 @@ public class SignupService {
                 "confirmation",
                 body);
     }
-    public ResponseEntity<Object> registerUser(SignupForm signupForm) {
+    public Map<String, String> registerUser(SignupForm signupForm) {
         Map<String, String> validation = new HashMap<>();
         if (!Validator.validateEmail(signupForm.email())) {
             validation.put("isSignupSuccessful", "false");
             validation.put("reason", "wrong email format");
-            return new ResponseEntity<>(validation, HttpStatus.BAD_REQUEST);
+            return validation;
         }
         if (!validatePassword(signupForm.password())) {
             validation.put("isSignupSuccessful", "false");
             validation.put("reason", PasswordValidator.VERSION1.MESSAGE);
-            return new ResponseEntity<>(validation, HttpStatus.UNAUTHORIZED);
+            return validation;
         }
         if (checkIfAlreadyRegistered(signupForm.email())) {
             validation.put("isSignupSuccessful", "false");
             validation.put("reason", "already registered email");
-            return new ResponseEntity<>(validation, HttpStatus.BAD_REQUEST);
+            return validation;
         }
         validation.put("isSignupSuccessful", "true");
         validation.put("reason", "everything's valid, email sent for confirmation");
@@ -74,7 +74,7 @@ public class SignupService {
                         false,
                         emailConfirmationToken));
         sendEmail(emailConfirmationToken, signupForm.email());
-        return new ResponseEntity<>(validation, HttpStatus.CREATED);
+        return validation;
     }
     public Map<String, String> checkToken(String token) {
         Map<String, String> response = new HashMap<>();

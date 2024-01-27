@@ -53,7 +53,6 @@ public class ImageService {
                 .builder()
                 .name(imageMetadata.get("name"))
                 .format(imageMetadata.get("format"))
-                .email(email)
                 .image48Px(smallerImage)
                 .upload_time(LocalDateTime.now())
                 .user(user)
@@ -69,14 +68,16 @@ public class ImageService {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    public ResponseEntity<Object> getImagesByEmail(String email) {
-        Set<Image> images = imageRepo.getImagesByEmail(email);
-        return new ResponseEntity<>(images, HttpStatus.OK);
+    public Set<Image> getImagesByEmail(String email) {
+        User user = usersRepo.findByEmail(email);
+        Set<Image> images = imageRepo.getImageByUser(user);
+        return images;
     }
 
     public ResponseEntity<Object> getImageByEmailAndName(String email, String name) {
         try {
-            Image image = imageRepo.getImageByEmailAndName(email, name);
+            User user = usersRepo.findByEmail(email);
+            Image image = imageRepo.getImageByUserAndName(user, name);
             if (image == null) {
                 return ResponseEntity
                         .status(HttpStatus.BAD_REQUEST)

@@ -15,7 +15,7 @@ public class MyUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        com.pisti.harmonicrainbow.model.User userFromRepo = userRepository.findFirstByEmail(username);
+        com.pisti.harmonicrainbow.model.User userFromRepo = userRepository.findByEmail(username);
         if (userFromRepo == null) {
             throw new UsernameNotFoundException(username);
         }
@@ -26,7 +26,7 @@ public class MyUserDetailsService implements UserDetailsService {
                 .build();
     }
     public boolean isUserActive(String username) {
-        com.pisti.harmonicrainbow.model.User userFromRepo = userRepository.findFirstByEmail(username);
+        com.pisti.harmonicrainbow.model.User userFromRepo = userRepository.findByEmail(username);
         if (userFromRepo == null) {
             throw new UsernameNotFoundException(username);
         }

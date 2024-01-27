@@ -13,15 +13,11 @@ import java.util.Map;
 public class HslAndRgbService {
     private final HslAndRgbConverter hslAndRgbConverter;
 
-    public ResponseEntity<Object> getHslFromRgb(int r, int g, int b) {
-        Map<String, Float> values = hslAndRgbConverter.convertRGBtoHSL(r, g, b);
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(values);
+    public Map<String, Float> getHslFromRgb(int r, int g, int b) {
+        return hslAndRgbConverter.convertRGBtoHSL(r, g, b);
     }
 
-    public ResponseEntity<Object> getRgbFromHsl(int h, int s, int l) {
-        Map<String, Integer> values = hslAndRgbConverter.convertHSLtoRGB(h, s, l);
-        return ResponseEntity.status(HttpStatus.OK).body(values);
+    public Map<String, Integer> getRgbFromHsl(int h, int s, int l) {
+        return hslAndRgbConverter.convertHSLtoRGB(h, s, l);
     }
 }

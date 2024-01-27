@@ -2,6 +2,8 @@ package com.pisti.harmonicrainbow.controller;
 
 import com.pisti.harmonicrainbow.service.SaturationChangeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,6 +21,12 @@ public class SaturationChangeController {
     public ResponseEntity<Object> changeSaturation(@RequestParam String email,
                                                    @RequestParam String name,
                                                    @RequestParam Integer saturation) {
-        return saturationChangeService.changeSaturation(email, name, saturation);
+        ByteArrayResource byteArrayResource = saturationChangeService.changeSaturation(email, name, saturation);
+        if (byteArrayResource == null) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+        else {
+            return new ResponseEntity<>(byteArrayResource, HttpStatus.OK);
+        }
     }
 }

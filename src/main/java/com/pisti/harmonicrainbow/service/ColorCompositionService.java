@@ -18,7 +18,7 @@ import java.util.Map;
 public class ColorCompositionService {
     private final ImageService imageService;
 
-    public ResponseEntity<Object> getColorComposition(String email, String name) {
+    public Map<String, Float> getColorComposition(String email, String name) {
         ResponseEntity<Object> imageResponse = imageService.getImageByEmailAndName(email, name);
         if (imageResponse.getStatusCode() == HttpStatus.OK) {
             try {
@@ -27,14 +27,14 @@ public class ColorCompositionService {
                 BufferedImage bufferedImage = ImageIO.read(image.getInputStream());
                 byte[] pixels = ((DataBufferByte) bufferedImage.getRaster().getDataBuffer()).getData();
                 Map<String, Float> response = getColorComposition(pixels);
-                return new ResponseEntity<>(response, HttpStatus.OK);
+                return response;
             }
             catch (IOException e) {
-                return new ResponseEntity<>(new HashMap<>(), HttpStatus.BAD_REQUEST);
+                return null;
             }
         }
         else {
-            return imageResponse;
+            return null;
         }
     }
     private Map<String, Float> getColorComposition(byte[] pixels) {

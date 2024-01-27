@@ -2,6 +2,8 @@ package com.pisti.harmonicrainbow.controller;
 
 import com.pisti.harmonicrainbow.service.ColorChangeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +19,13 @@ public class ColorChangeController {
     @PostMapping(path = "change-color", produces = MediaType.IMAGE_JPEG_VALUE)
     public ResponseEntity<Object> changeColor(@RequestBody Map<String, Map<String, Integer>> body,
                                               @RequestParam String email, @RequestParam  String name) {
-        return colorChangeService.changeColors(body, email, name);
+        ByteArrayResource byteArrayResource = colorChangeService.changeColors(body, email, name);
+        if (byteArrayResource == null) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+        else {
+            return new ResponseEntity<>(byteArrayResource, HttpStatus.OK);
+        }
     }
 }
 

@@ -21,14 +21,9 @@ public class ColorChangeService {
     private final ImageConverter imageConverter;
     private final ImageInitializer imageInitializer;
 
-    public ResponseEntity<Object> changeColors(Map<String, Map<String, Integer>> body, String email, String name) {
-        System.out.println(body.toString());
-        System.out.println(email);
-        System.out.println(name);
+    public ByteArrayResource changeColors(Map<String, Map<String, Integer>> body, String email, String name) {
         if (body.get("from") == null || body.get("to") == null || body.get("newColor") == null) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body("");
+            return null;
         }
         ResponseEntity<Object> imageResponse = imageService.getImageByEmailAndName(email, name);
         if (imageResponse.getStatusCode() == HttpStatus.OK) {
@@ -56,15 +51,12 @@ public class ColorChangeService {
 
                 ByteArrayResource inputStream = imageConverter.convertImage(newImage, formatName);
 
-                return ResponseEntity
-                        .status(HttpStatus.OK)
-                        .contentLength(inputStream.contentLength())
-                        .body(inputStream);
+                return inputStream;
             } catch (IOException e) {
-                return new ResponseEntity<>(new HashMap<>(), HttpStatus.BAD_REQUEST);
+                return null;
             }
         } else {
-            return imageResponse;
+            return null;
         }
     }
 
@@ -110,8 +102,6 @@ public class ColorChangeService {
                     pixels[i + 3] = (byte) newRed;
                 }
             }
-        } else {
-            System.out.println("Unsupported bufferedimage type!");
         }
     }
 

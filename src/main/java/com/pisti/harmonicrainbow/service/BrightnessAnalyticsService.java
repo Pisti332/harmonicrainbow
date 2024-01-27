@@ -18,7 +18,7 @@ import java.util.Map;
 public class BrightnessAnalyticsService {
     private final ImageService imageService;
 
-    public ResponseEntity<Object> getBrightness(String email, String name) {
+    public Map<String, Integer> getBrightness(String email, String name) {
         ResponseEntity<Object> imageResponse = imageService.getImageByEmailAndName(email, name);
         if (imageResponse.getStatusCode() == HttpStatus.OK) {
             try {
@@ -29,14 +29,14 @@ public class BrightnessAnalyticsService {
                 int brightness = getBrightness(pixels);
                 Map<String, Integer> response = new HashMap<>();
                 response.put("brightness", brightness);
-                return new ResponseEntity<>(response, HttpStatus.OK);
+                return response;
             }
             catch (IOException e) {
-                return new ResponseEntity<>(new HashMap<>(), HttpStatus.BAD_REQUEST);
+                return null;
             }
         }
         else {
-            return imageResponse;
+            return null;
         }
     }
     private int getBrightness(byte[] pixelArr) {
