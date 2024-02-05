@@ -4,6 +4,7 @@ import com.pisti.harmonicrainbow.model.User;
 import com.pisti.harmonicrainbow.model.DTOS.SignupForm;
 import com.pisti.harmonicrainbow.repository.UsersRepo;
 import com.pisti.harmonicrainbow.service.utility.Validator;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -57,6 +58,11 @@ public class SignupService {
         if (!validatePassword(signupForm.password())) {
             validation.put("isSignupSuccessful", "false");
             validation.put("reason", PasswordValidator.VERSION1.MESSAGE);
+            return validation;
+        }
+        if (!signupForm.password().equals(signupForm.password2())) {
+            validation.put("isSignupSuccessful", "false");
+            validation.put("reason", "the two passwords doesn't match");
             return validation;
         }
         if (checkIfAlreadyRegistered(signupForm.email())) {

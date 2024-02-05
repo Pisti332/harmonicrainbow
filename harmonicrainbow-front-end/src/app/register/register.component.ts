@@ -19,20 +19,22 @@ export class RegisterComponent {
 
   applyForm = new FormGroup({
     email: new FormControl(""),
-    password: new FormControl("")
+    password: new FormControl(""),
+    password2: new FormControl("")
   })
 
   async onSubmit() {
     const email = this.applyForm.value.email;
     const password = this.applyForm.value.password;
-    const response = await this.makeRegisterRequest(email ?? '', password ?? '', this.REGISTER_URL);
+    const password2 = this.applyForm.value.password2;
+    const response = await this.makeRegisterRequest(email ?? '', password ?? '', password2 ?? "", this.REGISTER_URL);
     const body = await response.json();
     this.showPopup(body.reason);
   }
-  async makeRegisterRequest(email: String, password: String, url: string): Promise<Response> {
+  async makeRegisterRequest(email: String, password: String, password2: String, url: string): Promise<Response> {
     const response: Response = await fetch(url, {
       "method": "POST",
-      "body": `{"email": "${email}", "password": "${password}"}`,
+      "body": `{"email": "${email}", "password": "${password}", "password2": "${password2}"}`,
       "headers": { "Content-Type": "application/json" }
     })
     return response;

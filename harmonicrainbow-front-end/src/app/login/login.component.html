@@ -4,5 +4,5 @@
         <input placeholder="password" type="password" id="password" formControlName="password" class="login"><br>
         <button type="submit" id="submit" name="submit" class="login">LOGIN</button>
     </form>
-    <p id="invalidCredentialsPopup" *ngIf="isPopupShowing" class="invalid-popup">{{popupMessage}}</p>
+    <p id="invalidCredentialsPopup" *ngIf="isPopupShowing" class="invalid-popup">{{popupMessage | uppercase}}</p>
 </div>

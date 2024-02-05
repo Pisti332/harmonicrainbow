@@ -25,7 +25,7 @@ public class UserController {
     public ResponseEntity<Object> signupUser(@RequestBody SignupForm signupForm) {
         Map<String, String> registerObj = signupService.registerUser(signupForm);
         if (registerObj.get("isSignupSuccessful").equals("false")) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(registerObj, HttpStatus.BAD_REQUEST);
         }
         else {
             return new ResponseEntity<>(registerObj, HttpStatus.CREATED);
@@ -37,7 +37,7 @@ public class UserController {
         MultiValueMap<String, String> headers = new HttpHeaders();
         headers.put("Authorization", Collections.singletonList("Bearer " + loginObj.get("auth")));
         if (loginObj.get("isLoginSuccessful").equals("false")) {
-            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(loginObj, HttpStatus.UNAUTHORIZED);
         }
         else {
             return new ResponseEntity<>(loginObj, headers, HttpStatus.OK);
