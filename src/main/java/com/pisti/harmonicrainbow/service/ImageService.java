@@ -35,9 +35,10 @@ public class ImageService {
     private final String UPLOAD_DIRECTORY = System.getenv("UPLOAD_DIRECTORY");
 
     public Map<String, String> uploadImage(MultipartFile file, String email) throws IOException {
+        int smallImagePixelSize = 32;
         Map<String, String> response = new HashMap<>();
         BufferedImage image = ImageIO.read(file.getInputStream());
-        BufferedImage image1 = imageResizer.resize(image, 32);
+        BufferedImage image1 = imageResizer.resize(image, smallImagePixelSize);
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ImageIO.write(image1, "jpg", baos);

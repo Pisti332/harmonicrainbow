@@ -139,5 +139,4 @@ export class AppComponent implements OnInit{
     this.isAnalyzeWorkbench = false;
     this.isEditWorkbench = false;
   }
-  // todo make sure submit button disables login popup
 }

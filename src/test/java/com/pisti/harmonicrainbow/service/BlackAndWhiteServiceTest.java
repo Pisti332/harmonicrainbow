@@ -47,25 +47,15 @@ public class BlackAndWhiteServiceTest {
         ImageIO.write(this.bufferedImageJpg, "jpg", baosJpg);
         byte[] bytesJpg = baosJpg.toByteArray();
         ByteArrayResource inputStreamJpg = new ByteArrayResource(bytesJpg);
-        ResponseEntity<Object> responseJpg = ResponseEntity
-                .status(HttpStatus.OK)
-                .contentLength(inputStreamJpg.contentLength())
-                .body(inputStreamJpg);
 
         ByteArrayOutputStream baosPng = new ByteArrayOutputStream();
         ImageIO.write(this.bufferedImagePng, "png", baosPng);
         byte[] bytesPng = baosPng.toByteArray();
         ByteArrayResource inputStreamPng = new ByteArrayResource(bytesPng);
-        ResponseEntity<Object> responsePng = ResponseEntity
-                .status(HttpStatus.OK)
-                .contentLength(inputStreamPng.contentLength())
-                .body(inputStreamPng);
-        ResponseEntity<Object> badResponse = ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body("");
-        when(imageService.getImageByEmailAndName("test@test.com", "test")).thenReturn(responseJpg);
-        when(imageService.getImageByEmailAndName("test@test.com", "test1")).thenReturn(responsePng);
-        when(imageService.getImageByEmailAndName("test123@test.com", "asd")).thenReturn(badResponse);
+
+        when(imageService.getImageByEmailAndName("test@test.com", "test")).thenReturn(inputStreamJpg);
+        when(imageService.getImageByEmailAndName("test@test.com", "test1")).thenReturn(inputStreamPng);
+        when(imageService.getImageByEmailAndName("test123@test.com", "asd")).thenReturn(null);
     }
 
     @Test

@@ -62,11 +62,12 @@ public class ColorChangeService {
                                      Map<String, Integer> to,
                                      Map<String, Integer> newColor,
                                      int imageType) {
+        int iterationCycle = 3;
         float redAvg = (float) (from.get("red") + to.get("red")) / 2;
         float greenAvg = (float) (from.get("green") + to.get("green")) / 2;
         float blueAvg = (float) (from.get("blue") + to.get("blue")) / 2;
         if (imageType == BufferedImage.TYPE_3BYTE_BGR) {
-            for (int i = 0; i < pixels.length; i += 3) {
+            for (int i = 0; i < pixels.length; i += iterationCycle) {
                 int blue = Byte.toUnsignedInt(pixels[i]);
                 int green = Byte.toUnsignedInt(pixels[i + 1]);
                 int red = Byte.toUnsignedInt(pixels[i + 2]);
@@ -84,7 +85,8 @@ public class ColorChangeService {
             }
         }
         if (imageType == BufferedImage.TYPE_4BYTE_ABGR) {
-            for (int i = 0; i < pixels.length; i += 4) {
+            iterationCycle = 4;
+            for (int i = 0; i < pixels.length; i += iterationCycle) {
                 int blue = Byte.toUnsignedInt(pixels[i + 1]);
                 int green = Byte.toUnsignedInt(pixels[i + 2]);
                 int red = Byte.toUnsignedInt(pixels[i + 3]);
@@ -104,9 +106,10 @@ public class ColorChangeService {
     }
 
     private int scaleColor(int newColor, int currentColor, float avgColor) {
+        int maxChannelValue = 255;
         int calculatedColor = (int) (newColor * currentColor / avgColor);
-        if (calculatedColor > 255) {
-            calculatedColor = 255;
+        if (calculatedColor > maxChannelValue) {
+            calculatedColor = maxChannelValue;
         } else if (calculatedColor < 0) {
             calculatedColor = 0;
         }

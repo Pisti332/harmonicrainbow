@@ -63,9 +63,9 @@ public class SaturationChangeServiceTest {
         ResponseEntity<Object> badResponse =  ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body("");
-        when(imageService.getImageByEmailAndName("test@test.com", "test")).thenReturn(responseJpg);
-        when(imageService.getImageByEmailAndName("test@test.com", "test1")).thenReturn(responsePng);
-        when(imageService.getImageByEmailAndName("test123@test.com", "asd")).thenReturn(badResponse);
+        when(imageService.getImageByEmailAndName("test@test.com", "test")).thenReturn(inputStreamJpg);
+        when(imageService.getImageByEmailAndName("test@test.com", "test1")).thenReturn(inputStreamPng);
+        when(imageService.getImageByEmailAndName("test123@test.com", "asd")).thenReturn(null);
     }
 
     @Test

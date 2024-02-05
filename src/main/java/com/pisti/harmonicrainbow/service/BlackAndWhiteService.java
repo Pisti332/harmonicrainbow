@@ -49,9 +49,10 @@ public class BlackAndWhiteService {
         }
     }
 
-    private void mutateToBlackAndWhite(byte[] imageData, int imageType) {
+    private void mutateToBlackAndWhite(byte[] imageData, int imageType) throws IOException {
+        int iterationCycle = 3;
         if (imageType == BufferedImage.TYPE_3BYTE_BGR) {
-            for (int i = 0; i < imageData.length; i += 3) {
+            for (int i = 0; i < imageData.length; i += iterationCycle) {
                 int blue = Byte.toUnsignedInt(imageData[i]);
                 int green = Byte.toUnsignedInt(imageData[i + 1]);
                 int red = Byte.toUnsignedInt(imageData[i + 2]);
@@ -62,7 +63,8 @@ public class BlackAndWhiteService {
             }
         }
         else if (imageType == BufferedImage.TYPE_4BYTE_ABGR) {
-            for (int i = 0; i < imageData.length; i += 4) {
+            iterationCycle = 4;
+            for (int i = 0; i < imageData.length; i += iterationCycle) {
                 int blue = Byte.toUnsignedInt(imageData[i + 1]);
                 int green = Byte.toUnsignedInt(imageData[i + 2]);
                 int red = Byte.toUnsignedInt(imageData[i + 3]);
@@ -71,8 +73,7 @@ public class BlackAndWhiteService {
                 imageData[i + 2] = (byte) avg;
                 imageData[i + 3] = (byte) avg;
             }
-        } else {
-            System.out.println("Unsupported bufferedimage type!");
         }
+        else throw new IOException();
     }
 }

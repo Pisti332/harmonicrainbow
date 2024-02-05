@@ -49,7 +49,6 @@ public class SigninService {
             );
             UserDetails user = myUserDetailsService.loadUserByUsername(authentication.getName());
 
-            System.out.println(user);
 
             UserDetails userDetails = org.springframework.security.core.userdetails.User
                     .builder()

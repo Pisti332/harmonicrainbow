@@ -42,7 +42,9 @@ public class BrightnessAnalyticsService {
         final int pixelValuesNum = 3;
         final int percentageMultiplier = 100;
         final int maxPixelBrightness = 765;
-        for(int i = 0; i < pixelArr.length; i += 3) {
+        final int iterationCycle = 3;
+
+        for(int i = 0; i < pixelArr.length; i += iterationCycle) {
             brightnessSum += (double) (Byte.toUnsignedInt(pixelArr[i]) +
                     Byte.toUnsignedInt(pixelArr[i + 1]) +
                     Byte.toUnsignedInt(pixelArr[i + 2])) /
