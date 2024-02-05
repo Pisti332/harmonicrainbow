@@ -5,6 +5,6 @@
         <input placeholder="password again" type="password" id="password2" formControlName="password2" class="register"><br>
         <button type="submit" id="submit" name="submit" class="register">REGISTER</button>
     </form>
-    <p id="invalidCredentialsPopup" *ngIf="invalidCredentialsPopup" class="invalid-popup">INVALID CREDENTIALS</p>
+    <p id="invalidCredentialsPopup" *ngIf="isPopupShowing" class="popup">{{popupMessage | uppercase}}</p>
 
 </div>

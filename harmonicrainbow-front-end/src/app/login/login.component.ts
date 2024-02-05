@@ -14,7 +14,8 @@ export class LoginComponent {
   private LOGIN_URL: string = "/api/user/signin";
   private IMAGE_URL: string = "/api/image/";
   @Input() token: string = "";
-  public invalidCredentialsPopup: boolean = false;
+  protected isPopupShowing: boolean = false;
+  protected popupMessage: string | undefined;;
 
   @Output() tokenEvent = new EventEmitter<string>();
   @Output() loginEvent = new EventEmitter<boolean>();
@@ -22,7 +23,7 @@ export class LoginComponent {
   @Output() emailEvent = new EventEmitter<string>();
   @Output() imagesEvent = new EventEmitter<any>();
 
-  applyForm = new FormGroup({ 
+  applyForm = new FormGroup({
     email: new FormControl(""),
     password: new FormControl("")
   })
@@ -36,9 +37,9 @@ export class LoginComponent {
     if (token) {
       this.tokenEvent.emit(token);
     }
+    const body = await response.json();
     if (!response.ok) {
-      this.showInvalidCredentialsPopup();
-      throw new Error("Login wasn't successful!");
+      this.showPopup(body.reason);
     }
     else {
       this.loginEvent.emit(false);
@@ -58,12 +59,11 @@ export class LoginComponent {
     })
     return response;
   }
-  showInvalidCredentialsPopup() {
-    this.invalidCredentialsPopup = true;
+  showPopup(message: string) {
+    this.popupMessage = message;
+    this.isPopupShowing = true;
     setTimeout(() => {
-      // var element = document.getElementById('invalidCredentialsPopup')!;
-      // element.classList.toggle('fade-out');
-      this.invalidCredentialsPopup = false;
+      this.isPopupShowing = false;
     }, 3000)
   }
 }
