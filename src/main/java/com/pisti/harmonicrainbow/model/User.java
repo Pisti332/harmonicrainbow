@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -26,10 +27,10 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    private UUID user_id;
     @Column(unique = true, nullable = false)
     private String email;
-    @Column(unique = false, nullable = false)
+    @Column(nullable = false)
     private String password;
     @Column(nullable = false)
     private boolean isActive;
@@ -38,5 +39,7 @@ public class User {
     private LocalDateTime registryDate;
     @Column(nullable = false)
     private boolean isLoggedIn;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Image> images;
 
 }

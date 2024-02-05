@@ -39,11 +39,7 @@ public class SaturationChangeControllerTest {
         byte[] bytes = new byte[]{(byte) 10, (byte) 10, (byte) 10};
         ByteArrayResource inputStream = new ByteArrayResource(bytes);
 
-        ResponseEntity<Object> response = ResponseEntity
-                .status(HttpStatus.OK)
-                .contentLength(inputStream.contentLength())
-                .body(inputStream);
-        when(saturationChangeService.changeSaturation(email, name, saturation)).thenReturn(response);
+        when(saturationChangeService.changeSaturation(email, name, saturation)).thenReturn(inputStream);
     }
     @Test
     @WithMockUser(username = "testuser")

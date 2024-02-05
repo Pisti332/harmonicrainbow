@@ -1,6 +1,9 @@
 package com.pisti.harmonicrainbow.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.pisti.harmonicrainbow.service.utility.ImageAnalyzer;
+import com.pisti.harmonicrainbow.service.utility.ImageConverter;
+import com.pisti.harmonicrainbow.service.utility.ImageInitializer;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,93 +11,50 @@ import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
 import java.awt.image.*;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class ColorChangeService {
-    private ImageService imageService;
+    private final ImageService imageService;
+    private final ImageConverter imageConverter;
+    private final ImageInitializer imageInitializer;
 
-    @Autowired
-    public ColorChangeService(ImageService imageService) {
-        this.imageService = imageService;
-    }
-
-    public ResponseEntity<Object> changeColors(Map<String, Map<String, Integer>> body, String email, String name) {
-        System.out.println(body.toString());
-        System.out.println(email);
-        System.out.println(name);
+    public ByteArrayResource changeColors(Map<String, Map<String, Integer>> body, String email, String name) {
         if (body.get("from") == null || body.get("to") == null || body.get("newColor") == null) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body("");
+            return null;
         }
-        ResponseEntity<Object> imageResponse = imageService.getImageByEmailAndName(email, name);
-        if (imageResponse.getStatusCode() == HttpStatus.OK) {
+        ByteArrayResource imageResponse = imageService.getImageByEmailAndName(email, name);
+        if (imageResponse != null) {
             try {
-                ByteArrayResource image = (ByteArrayResource) imageResponse.getBody();
-                BufferedImage bufferedImage = ImageIO.read(image.getInputStream());
-                byte[] colorValues = ((DataBufferByte) bufferedImage.getRaster().getDataBuffer()).getData();
+                BufferedImage bufferedImage = ImageIO.read(imageResponse.getInputStream());
 
-                int width = bufferedImage.getWidth();
-                int height = bufferedImage.getHeight();
-
-                int imageType = bufferedImage.getType();
-                String formatName;
-                int[] bandOffsets;
-                if (imageType == BufferedImage.TYPE_INT_RGB) {
-                    bandOffsets = new int[]{0, 1, 2};
-                    formatName = "JPEG";
-                } else if (imageType == BufferedImage.TYPE_3BYTE_BGR) {
-                    bandOffsets = new int[]{2, 1, 0};
-                    formatName = "JPEG";
-                } else if (imageType == BufferedImage.TYPE_INT_ARGB) {
-                    bandOffsets = new int[]{0, 1, 2, 3};
-                    formatName = "PNG";
-                } else if (imageType == BufferedImage.TYPE_4BYTE_ABGR) {
-                    bandOffsets = new int[]{3, 2, 1, 0};
-                    formatName = "PNG";
-                } else {
-                    bandOffsets = new int[]{0, 1, 2};
-                    formatName = "JPEG";
-                }
+                ImageAnalyzer imageAnalyzer = new ImageAnalyzer(bufferedImage);
+                byte[] colorValues = imageAnalyzer.getColorValues();
+                int width = imageAnalyzer.getWidth();
+                int height = imageAnalyzer.getHeight();
+                int[] bandOffsets = imageAnalyzer.getBandOffsets();
+                String formatName = imageAnalyzer.getFormatName();
+                int type = imageAnalyzer.getImageType();
 
                 mutateRangeOfPixels(colorValues,
                         body.get("from"),
                         body.get("to"),
                         body.get("newColor"),
-                        imageType);
+                        type);
 
-                DataBuffer dataBuffer = new DataBufferByte(colorValues, colorValues.length);
+                BufferedImage newImage =
+                        imageInitializer.initializeImage(colorValues, width, height, bandOffsets, type);
 
-                WritableRaster raster = WritableRaster.createInterleavedRaster(dataBuffer,
-                        width,
-                        height,
-                        width * bandOffsets.length,
-                        bandOffsets.length,
-                        bandOffsets,
-                        null);
+                ByteArrayResource inputStream = imageConverter.convertImage(newImage, formatName);
 
-                BufferedImage newImage = new BufferedImage(width,
-                        height,
-                        bufferedImage.getType());
-
-                newImage.setData(raster);
-
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                ImageIO.write(newImage, formatName, baos);
-                byte[] bytes = baos.toByteArray();
-                ByteArrayResource inputStream = new ByteArrayResource(bytes);
-                return ResponseEntity
-                        .status(HttpStatus.OK)
-                        .contentLength(inputStream.contentLength())
-                        .body(inputStream);
+                return inputStream;
             } catch (IOException e) {
-                return new ResponseEntity<>(new HashMap<>(), HttpStatus.BAD_REQUEST);
+                return null;
             }
         } else {
-            return imageResponse;
+            return null;
         }
     }
 
@@ -102,11 +62,12 @@ public class ColorChangeService {
                                      Map<String, Integer> to,
                                      Map<String, Integer> newColor,
                                      int imageType) {
+        int iterationCycle = 3;
         float redAvg = (float) (from.get("red") + to.get("red")) / 2;
         float greenAvg = (float) (from.get("green") + to.get("green")) / 2;
         float blueAvg = (float) (from.get("blue") + to.get("blue")) / 2;
         if (imageType == BufferedImage.TYPE_3BYTE_BGR) {
-            for (int i = 0; i < pixels.length; i += 3) {
+            for (int i = 0; i < pixels.length; i += iterationCycle) {
                 int blue = Byte.toUnsignedInt(pixels[i]);
                 int green = Byte.toUnsignedInt(pixels[i + 1]);
                 int red = Byte.toUnsignedInt(pixels[i + 2]);
@@ -124,7 +85,8 @@ public class ColorChangeService {
             }
         }
         if (imageType == BufferedImage.TYPE_4BYTE_ABGR) {
-            for (int i = 0; i < pixels.length; i += 4) {
+            iterationCycle = 4;
+            for (int i = 0; i < pixels.length; i += iterationCycle) {
                 int blue = Byte.toUnsignedInt(pixels[i + 1]);
                 int green = Byte.toUnsignedInt(pixels[i + 2]);
                 int red = Byte.toUnsignedInt(pixels[i + 3]);
@@ -140,15 +102,14 @@ public class ColorChangeService {
                     pixels[i + 3] = (byte) newRed;
                 }
             }
-        } else {
-            System.out.println("Unsupported bufferedimage type!");
         }
     }
 
     private int scaleColor(int newColor, int currentColor, float avgColor) {
+        int maxChannelValue = 255;
         int calculatedColor = (int) (newColor * currentColor / avgColor);
-        if (calculatedColor > 255) {
-            calculatedColor = 255;
+        if (calculatedColor > maxChannelValue) {
+            calculatedColor = maxChannelValue;
         } else if (calculatedColor < 0) {
             calculatedColor = 0;
         }

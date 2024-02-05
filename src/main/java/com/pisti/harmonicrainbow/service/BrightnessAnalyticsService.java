@@ -1,5 +1,6 @@
 package com.pisti.harmonicrainbow.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,31 +14,27 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class BrightnessAnalyticsService {
     private final ImageService imageService;
 
-    public BrightnessAnalyticsService(ImageService imageService) {
-        this.imageService = imageService;
-    }
-
-    public ResponseEntity<Object> getBrightness(String email, String name) {
-        ResponseEntity<Object> imageResponse = imageService.getImageByEmailAndName(email, name);
-        if (imageResponse.getStatusCode() == HttpStatus.OK) {
+    public Map<String, Integer> getBrightness(String email, String name) {
+        ByteArrayResource imageResponse = imageService.getImageByEmailAndName(email, name);
+        if (imageResponse != null) {
             try {
-                ByteArrayResource image = (ByteArrayResource) imageResponse.getBody();
-                BufferedImage bufferedImage = ImageIO.read(image.getInputStream());
+                BufferedImage bufferedImage = ImageIO.read(imageResponse.getInputStream());
                 byte[] pixels = ((DataBufferByte) bufferedImage.getRaster().getDataBuffer()).getData();
                 int brightness = getBrightness(pixels);
                 Map<String, Integer> response = new HashMap<>();
                 response.put("brightness", brightness);
-                return new ResponseEntity<>(response, HttpStatus.OK);
+                return response;
             }
             catch (IOException e) {
-                return new ResponseEntity<>(new HashMap<>(), HttpStatus.BAD_REQUEST);
+                return null;
             }
         }
         else {
-            return imageResponse;
+            return null;
         }
     }
     private int getBrightness(byte[] pixelArr) {
@@ -45,7 +42,9 @@ public class BrightnessAnalyticsService {
         final int pixelValuesNum = 3;
         final int percentageMultiplier = 100;
         final int maxPixelBrightness = 765;
-        for(int i = 0; i < pixelArr.length; i += 3) {
+        final int iterationCycle = 3;
+
+        for(int i = 0; i < pixelArr.length; i += iterationCycle) {
             brightnessSum += (double) (Byte.toUnsignedInt(pixelArr[i]) +
                     Byte.toUnsignedInt(pixelArr[i + 1]) +
                     Byte.toUnsignedInt(pixelArr[i + 2])) /

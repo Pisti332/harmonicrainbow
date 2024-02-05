@@ -1,5 +1,6 @@
 package com.pisti.harmonicrainbow.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,9 +24,11 @@ public class Image {
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime upload_time;
     @Column(nullable = false)
-    private String email;
-    @Column(nullable = false)
     private String name;
     @Column(nullable = false)
     private String format;
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }

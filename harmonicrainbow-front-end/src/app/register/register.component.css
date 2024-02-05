@@ -29,7 +29,7 @@
 .register-form > input {
     text-indent: 10px;
 }
-.invalid-popup {
+.popup {
     z-index: 2;
     color: rgb(195, 98, 65);
     font-weight: 800;

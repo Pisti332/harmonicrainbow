@@ -1,6 +1,6 @@
 package com.pisti.harmonicrainbow.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,31 +14,25 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class ColorCompositionService {
     private final ImageService imageService;
 
-    @Autowired
-    public ColorCompositionService(ImageService imageService) {
-        this.imageService = imageService;
-    }
-
-    public ResponseEntity<Object> getColorComposition(String email, String name) {
-        ResponseEntity<Object> imageResponse = imageService.getImageByEmailAndName(email, name);
-        if (imageResponse.getStatusCode() == HttpStatus.OK) {
+    public Map<String, Float> getColorComposition(String email, String name) {
+        ByteArrayResource imageResponse = imageService.getImageByEmailAndName(email, name);
+        if (imageResponse != null) {
             try {
-                ByteArrayResource image = (ByteArrayResource) imageResponse.getBody();
-                assert image != null;
-                BufferedImage bufferedImage = ImageIO.read(image.getInputStream());
+                BufferedImage bufferedImage = ImageIO.read(imageResponse.getInputStream());
                 byte[] pixels = ((DataBufferByte) bufferedImage.getRaster().getDataBuffer()).getData();
                 Map<String, Float> response = getColorComposition(pixels);
-                return new ResponseEntity<>(response, HttpStatus.OK);
+                return response;
             }
             catch (IOException e) {
-                return new ResponseEntity<>(new HashMap<>(), HttpStatus.BAD_REQUEST);
+                return null;
             }
         }
         else {
-            return imageResponse;
+            return null;
         }
     }
     private Map<String, Float> getColorComposition(byte[] pixels) {
@@ -58,9 +52,7 @@ public class ColorCompositionService {
                 greenSum += Byte.toUnsignedInt(pixels[i]);
             }
         }
-        System.out.println(redSum);
-        System.out.println(greenSum);
-        System.out.println(blueSum);
+
         float redPercentage = (float) redSum / brightnessSum * 100;
         float greenPercentage = (float) greenSum / brightnessSum * 100;
         float bluePercentage = (float) blueSum / brightnessSum * 100;

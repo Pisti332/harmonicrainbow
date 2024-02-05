@@ -34,35 +34,39 @@ public class SigninService {
         this.myUserDetailsService = myUserDetailsService;
     }
 
-    public ResponseEntity<Object> signinUser(SignupForm signupForm) {
+    public Map<String, String> signinUser(SignupForm signupForm) {
         Map<String, String> response = new HashMap<>();
         response.put("isLoginSuccessful", "false");
         if (!Validator.validateEmail(signupForm.email())) {
             response.put("reason", "wrong email format");
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            return response;
         }
 
         response.put("reason", "no user with this email and password combination");
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(signupForm.email(), signupForm.password())
-        );
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(signupForm.email(), signupForm.password())
+            );
+            UserDetails user = myUserDetailsService.loadUserByUsername(authentication.getName());
 
-        UserDetails user = myUserDetailsService.loadUserByUsername(authentication.getName());
 
-        UserDetails userDetails = org.springframework.security.core.userdetails.User
-                .builder()
-                .password(user.getPassword())
-                .username(user.getUsername())
-                .build();
-        String token = jwtService.generateToken(userDetails);
-        if (!myUserDetailsService.isUserActive(authentication.getName())) {
-            response.put("reason", "email hasn't been confirmed yet");
-            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+            UserDetails userDetails = org.springframework.security.core.userdetails.User
+                    .builder()
+                    .password(user.getPassword())
+                    .username(user.getUsername())
+                    .build();
+            String token = jwtService.generateToken(userDetails);
+            if (!myUserDetailsService.isUserActive(authentication.getName())) {
+                response.put("reason", "email hasn't been confirmed yet");
+                return response;
+            }
+            response.put("isLoginSuccessful", "true");
+            response.put("reason", "valid credentials");
+            response.put("auth", token);
+            return response;
         }
-        response.put("isLoginSuccessful", "true");
-        response.put("reason", "valid credentials");
-        MultiValueMap<String, String> headers = new HttpHeaders();
-        headers.put("Authorization", Collections.singletonList("Bearer " + token));
-        return new ResponseEntity<>(response, headers, HttpStatus.OK);
+        catch (Exception e) {
+            return response;
+        }
     }
 }

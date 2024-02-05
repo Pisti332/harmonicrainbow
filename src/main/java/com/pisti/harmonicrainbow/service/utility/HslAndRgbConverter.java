@@ -82,35 +82,9 @@ public class HslAndRgbConverter {
                 tempb++;
             }
 
-            if (tempr < 1.0 / 6.0) {
-                r = temp1 + (temp2 - temp1) * 6 * tempr;
-            } else if (tempr < 0.5) {
-                r = temp2;
-            } else if (tempr < 2.0 / 3.0) {
-                r = temp1 + (temp2 - temp1) * (((float) 2 / 3) - tempr) * 6;
-            } else {
-                r = temp1;
-            }
-
-            if (tempg < (float) 1 / 6) {
-                g = temp1 + (temp2 - temp1) * 6 * tempg;
-            } else if (tempg < 0.5) {
-                g = temp2;
-            } else if (tempg < (float) 2 / 3) {
-                g = temp1 + (temp2 - temp1) * (((float) 2 / 3) - tempg) * 6;
-            } else {
-                g = temp1;
-            }
-
-            if (tempb < (float) 1 / 6) {
-                b = temp1 + (temp2 - temp1) * 6 * tempb;
-            } else if (tempb < 0.5) {
-                b = temp2;
-            } else if (tempb < (float) 2 / 3) {
-                b = temp1 + (temp2 - temp1) * (((float) 2 / 3) - tempb) * 6;
-            } else {
-                b = temp1;
-            }
+            r = calcTemp(tempr, temp1, temp2);
+            g = calcTemp(tempg, temp1, temp2);
+            b = calcTemp(tempb, temp1, temp2);
         }
 
         int rVal = (int) (r * 255);
@@ -122,5 +96,18 @@ public class HslAndRgbConverter {
         RGB.put("b", bVal);
 
         return RGB;
+    }
+    private float calcTemp(float currentTemp, float temp1, float temp2) {
+        float currentChannel;
+        if (currentTemp < (float) 1 / 6) {
+            currentChannel = temp1 + (temp2 - temp1) * 6 * currentTemp;
+        } else if (currentTemp < 0.5) {
+            currentChannel = temp2;
+        } else if (currentTemp < (float) 2 / 3) {
+            currentChannel = temp1 + (temp2 - temp1) * (((float) 2 / 3) - currentTemp) * 6;
+        } else {
+            currentChannel = temp1;
+        }
+        return currentChannel;
     }
 }

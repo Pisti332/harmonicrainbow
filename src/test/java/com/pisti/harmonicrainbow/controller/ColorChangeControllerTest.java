@@ -44,10 +44,6 @@ public class ColorChangeControllerTest {
         body = new HashMap<>();
         byte[] bytes = new byte[]{(byte) 10, (byte) 10, (byte) 10};
         ByteArrayResource inputStream = new ByteArrayResource(bytes);
-        ResponseEntity<Object> response = ResponseEntity
-                .status(HttpStatus.OK)
-                .contentLength(inputStream.contentLength())
-                .body(inputStream);
 
         Map<String, Integer> from = new HashMap<>();
         from.put("red", 0);
@@ -66,7 +62,7 @@ public class ColorChangeControllerTest {
         newColor.put("green", 0);
         newColor.put("blue", 0);
         body.put("newColor", newColor);
-        when(colorChangeService.changeColors(body, email, name)).thenReturn(response);
+        when(colorChangeService.changeColors(body, email, name)).thenReturn(inputStream);
 
     }
 

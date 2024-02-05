@@ -1,4 +1,4 @@
 package com.pisti.harmonicrainbow.model.DTOS;
 
-public record SignupForm(String email, String password) {
+public record SignupForm(String email, String password, String password2) {
 }
