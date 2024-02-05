@@ -37,7 +37,7 @@ public class SecurityConfig {
                                     "index.html",
                                     "assets/img/*",
                                     "favicon.ico",
-                                    "main-ZMSIL2PP.js",
+                                    "main-MTUFV6IG.js",
                                     "polyfills-LZBJRJJE.js",
                                     "styles-3JZCYRXB.css"
                                     ).permitAll()
