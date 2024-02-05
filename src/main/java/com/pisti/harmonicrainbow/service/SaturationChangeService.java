@@ -55,7 +55,7 @@ public class SaturationChangeService {
         }
     }
 
-    private void mutateSaturation(byte[] colorValues, int imageType, int saturation) {
+    private void mutateSaturation(byte[] colorValues, int imageType, int saturation) throws IOException {
         if (imageType == BufferedImage.TYPE_3BYTE_BGR) {
             for (int i = 0; i < colorValues.length; i += 3) {
                 int red = Byte.toUnsignedInt(colorValues[i + 2]);
@@ -99,7 +99,7 @@ public class SaturationChangeService {
                 colorValues[i + 1] = rgb.get("b").byteValue();
             }
         } else {
-            System.out.println("Unsupported bufferedimage type!");
+            throw new IOException();
         }
     }
 }
