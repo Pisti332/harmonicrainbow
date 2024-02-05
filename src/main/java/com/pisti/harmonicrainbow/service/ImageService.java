@@ -34,7 +34,7 @@ public class ImageService {
     private final UsersRepo usersRepo;
     private final String UPLOAD_DIRECTORY = System.getenv("UPLOAD_DIRECTORY");
 
-    public ResponseEntity<Object> uploadImage(MultipartFile file, String email) throws IOException {
+    public Map<String, String> uploadImage(MultipartFile file, String email) throws IOException {
         Map<String, String> response = new HashMap<>();
         BufferedImage image = ImageIO.read(file.getInputStream());
         BufferedImage image1 = imageResizer.resize(image, 32);
@@ -61,11 +61,10 @@ public class ImageService {
         imageRepo.save(imageEntity);
 
         Path fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, file.getOriginalFilename());
-        System.out.println(fileNameAndPath);
         Files.write(fileNameAndPath, file.getBytes());
         response.put("isSuccessful", "true");
         response.put("reason", "valid credentials");
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return response;
     }
 
     public Set<Image> getImagesByEmail(String email) {
@@ -74,29 +73,21 @@ public class ImageService {
         return images;
     }
 
-    public ResponseEntity<Object> getImageByEmailAndName(String email, String name) {
+    public ByteArrayResource getImageByEmailAndName(String email, String name) {
         try {
             User user = usersRepo.findByEmail(email);
             Image image = imageRepo.getImageByUserAndName(user, name);
             if (image == null) {
-                return ResponseEntity
-                        .status(HttpStatus.BAD_REQUEST)
-                        .body("");
+                return null;
             }
             BufferedImage bufferedImage = imageReader.readImage(name, image.getFormat());
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ImageIO.write(bufferedImage, image.getFormat(), baos);
             byte[] bytes = baos.toByteArray();
-            ByteArrayResource inputStream = new ByteArrayResource(bytes);
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .contentLength(inputStream.contentLength())
-                    .body(inputStream);
+            return new ByteArrayResource(bytes);
 
         } catch (Exception e) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body("");
+            return null;
         }
     }
 }

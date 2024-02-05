@@ -19,12 +19,10 @@ public class BrightnessAnalyticsService {
     private final ImageService imageService;
 
     public Map<String, Integer> getBrightness(String email, String name) {
-        ResponseEntity<Object> imageResponse = imageService.getImageByEmailAndName(email, name);
-        if (imageResponse.getStatusCode() == HttpStatus.OK) {
+        ByteArrayResource imageResponse = imageService.getImageByEmailAndName(email, name);
+        if (imageResponse != null) {
             try {
-                ByteArrayResource image = (ByteArrayResource) imageResponse.getBody();
-                assert image != null;
-                BufferedImage bufferedImage = ImageIO.read(image.getInputStream());
+                BufferedImage bufferedImage = ImageIO.read(imageResponse.getInputStream());
                 byte[] pixels = ((DataBufferByte) bufferedImage.getRaster().getDataBuffer()).getData();
                 int brightness = getBrightness(pixels);
                 Map<String, Integer> response = new HashMap<>();

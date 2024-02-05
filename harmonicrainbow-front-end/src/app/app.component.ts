@@ -6,7 +6,9 @@ import { RegisterComponent } from './register/register.component';
 import { DescriptionComponent } from "./description/description.component"
 import { AnalyzeComponent } from './analyze/analyze.component';
 import { EditComponent } from './edit/edit.component';
-import _ from './login/images.download';
+import { OnInit } from '@angular/core';
+import _ from './images.download';
+import * as jwt_decode from "jwt-decode";
 
 type Image = { name: string };
 @Component({
@@ -18,7 +20,7 @@ type Image = { name: string };
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent {
+export class AppComponent implements OnInit{
   IMAGE_URL = "/api/image";
   title = 'harmonicrainbow-front-end';
   login: boolean = false;
@@ -34,6 +36,22 @@ export class AppComponent {
   currentImageName: string = "";
   page: number = 0;
   blob: Blob | undefined;
+
+  decodeToken(token: string) {
+    const decodedToken = jwt_decode.jwtDecode(token);
+    this.email = decodedToken.sub ? decodedToken.sub : "";
+  }
+
+  async ngOnInit() {
+    const token = localStorage.getItem('token');
+    if (token) {
+      this.token = token;
+      this.setIsLoggedIn(true);
+      this.decodeToken(token);
+      const response = await _.downloadImages(this.IMAGE_URL, "/" + this.email, this.token);
+      this.images = await response.json();
+    }
+  }
 
   setToken(token: string) {
     this.token = token;
@@ -85,6 +103,7 @@ export class AppComponent {
   logout(): void {
     this.token = '';
     this.setIsLoggedIn(false);
+    localStorage.removeItem('token');
   }
   async uploadImage(event: any): Promise<void> {
     const file: File = event.target.files[0];

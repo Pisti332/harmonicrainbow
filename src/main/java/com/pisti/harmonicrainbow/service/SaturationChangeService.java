@@ -28,12 +28,10 @@ public class SaturationChangeService {
         if (saturation > 100 || saturation < -100) {
             return null;
         }
-        ResponseEntity<Object> imageResponse = imageService.getImageByEmailAndName(email, name);
-        if (imageResponse.getStatusCode() == HttpStatus.OK) {
+        ByteArrayResource imageResponse = imageService.getImageByEmailAndName(email, name);
+        if (imageResponse != null) {
             try {
-                ByteArrayResource image = (ByteArrayResource) imageResponse.getBody();
-                assert image != null;
-                BufferedImage bufferedImage = ImageIO.read(image.getInputStream());
+                BufferedImage bufferedImage = ImageIO.read(imageResponse.getInputStream());
 
                 ImageAnalyzer imageAnalyzer = new ImageAnalyzer(bufferedImage);
                 byte[] colorValues = imageAnalyzer.getColorValues();

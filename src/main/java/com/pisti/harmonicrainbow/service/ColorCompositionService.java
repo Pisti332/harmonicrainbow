@@ -19,12 +19,10 @@ public class ColorCompositionService {
     private final ImageService imageService;
 
     public Map<String, Float> getColorComposition(String email, String name) {
-        ResponseEntity<Object> imageResponse = imageService.getImageByEmailAndName(email, name);
-        if (imageResponse.getStatusCode() == HttpStatus.OK) {
+        ByteArrayResource imageResponse = imageService.getImageByEmailAndName(email, name);
+        if (imageResponse != null) {
             try {
-                ByteArrayResource image = (ByteArrayResource) imageResponse.getBody();
-                assert image != null;
-                BufferedImage bufferedImage = ImageIO.read(image.getInputStream());
+                BufferedImage bufferedImage = ImageIO.read(imageResponse.getInputStream());
                 byte[] pixels = ((DataBufferByte) bufferedImage.getRaster().getDataBuffer()).getData();
                 Map<String, Float> response = getColorComposition(pixels);
                 return response;
@@ -54,9 +52,7 @@ public class ColorCompositionService {
                 greenSum += Byte.toUnsignedInt(pixels[i]);
             }
         }
-        System.out.println(redSum);
-        System.out.println(greenSum);
-        System.out.println(blueSum);
+
         float redPercentage = (float) redSum / brightnessSum * 100;
         float greenPercentage = (float) greenSum / brightnessSum * 100;
         float bluePercentage = (float) blueSum / brightnessSum * 100;

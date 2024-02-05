@@ -43,25 +43,31 @@ public class SigninService {
         }
 
         response.put("reason", "no user with this email and password combination");
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(signupForm.email(), signupForm.password())
-        );
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(signupForm.email(), signupForm.password())
+            );
+            UserDetails user = myUserDetailsService.loadUserByUsername(authentication.getName());
 
-        UserDetails user = myUserDetailsService.loadUserByUsername(authentication.getName());
+            System.out.println(user);
 
-        UserDetails userDetails = org.springframework.security.core.userdetails.User
-                .builder()
-                .password(user.getPassword())
-                .username(user.getUsername())
-                .build();
-        String token = jwtService.generateToken(userDetails);
-        if (!myUserDetailsService.isUserActive(authentication.getName())) {
-            response.put("reason", "email hasn't been confirmed yet");
+            UserDetails userDetails = org.springframework.security.core.userdetails.User
+                    .builder()
+                    .password(user.getPassword())
+                    .username(user.getUsername())
+                    .build();
+            String token = jwtService.generateToken(userDetails);
+            if (!myUserDetailsService.isUserActive(authentication.getName())) {
+                response.put("reason", "email hasn't been confirmed yet");
+                return response;
+            }
+            response.put("isLoginSuccessful", "true");
+            response.put("reason", "valid credentials");
+            response.put("auth", token);
             return response;
         }
-        response.put("isLoginSuccessful", "true");
-        response.put("reason", "valid credentials");
-        response.put("auth", token);
-        return response;
+        catch (Exception e) {
+            return response;
+        }
     }
 }

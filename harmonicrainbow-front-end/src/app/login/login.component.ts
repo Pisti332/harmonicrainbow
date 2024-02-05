@@ -1,7 +1,7 @@
 import { Component, Output, EventEmitter, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
-import _ from './images.download';
+import _ from '../images.download';
 
 @Component({
   selector: 'app-login',
@@ -35,6 +35,7 @@ export class LoginComponent {
     const headers: Headers = response.headers;
     const token = headers.get('authorization');
     if (token) {
+      localStorage.setItem('token', token);
       this.tokenEvent.emit(token);
     }
     const body = await response.json();
