@@ -2,7 +2,6 @@ package com.pisti.harmonicrainbow.service;
 
 import com.pisti.harmonicrainbow.model.Image;
 import com.pisti.harmonicrainbow.repository.ImageRepo;
-import com.pisti.harmonicrainbow.service.user.TokenService;
 import com.pisti.harmonicrainbow.service.utility.ImageNameConverter;
 import com.pisti.harmonicrainbow.service.utility.ImageReader;
 import com.pisti.harmonicrainbow.service.utility.ImageResizer;
@@ -25,10 +24,10 @@ import java.util.*;
 
 @Service
 public class ImageService {
-    private ImageRepo imageRepo;
-    private ImageNameConverter imageNameConverter;
-    private ImageResizer imageResizer;
-    private ImageReader imageReader;
+    private final ImageRepo imageRepo;
+    private final ImageNameConverter imageNameConverter;
+    private final ImageResizer imageResizer;
+    private final ImageReader imageReader;
     private final String UPLOAD_DIRECTORY = System.getenv("UPLOAD_DIRECTORY");
 
     @Autowired

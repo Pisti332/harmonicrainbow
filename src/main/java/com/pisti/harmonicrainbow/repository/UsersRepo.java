@@ -11,7 +11,5 @@ import java.util.UUID;
 public interface UsersRepo extends JpaRepository<User, UUID> {
     User findByEmail(String email);
     List<User> findByEmailConfirmationToken(UUID token);
-    User findByEmailAndPassword(String email, String password);
     User findFirstByEmail(String email);
-    void deleteByEmailAndPassword(String email, String password);
 }
