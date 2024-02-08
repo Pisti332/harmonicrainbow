@@ -7,13 +7,16 @@
     backdrop-filter: blur(3px);
     width: 100vw;
 }
+input[type="file"] {
+    display: none;
+}
 #logo {
     width: 10vw;
     margin: 0vw;
     padding: 1vw;
     justify-self: left;
 }
-p {
+p, label {
     justify-self: center;
     font-family: serif;
     font-size: 1vw;

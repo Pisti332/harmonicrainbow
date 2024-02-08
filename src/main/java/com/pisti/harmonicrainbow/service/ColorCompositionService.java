@@ -18,14 +18,13 @@ import java.util.Map;
 public class ColorCompositionService {
     private final ImageService imageService;
 
-    public Map<String, Float> getColorComposition(String email, String name) {
+    public Map<String, Integer> getColorComposition(String email, String name) {
         ByteArrayResource imageResponse = imageService.getImageByEmailAndName(email, name);
         if (imageResponse != null) {
             try {
                 BufferedImage bufferedImage = ImageIO.read(imageResponse.getInputStream());
                 byte[] pixels = ((DataBufferByte) bufferedImage.getRaster().getDataBuffer()).getData();
-                Map<String, Float> response = getColorComposition(pixels);
-                return response;
+                return getColorComposition(pixels);
             }
             catch (IOException e) {
                 return null;
@@ -35,7 +34,7 @@ public class ColorCompositionService {
             return null;
         }
     }
-    private Map<String, Float> getColorComposition(byte[] pixels) {
+    private Map<String, Integer> getColorComposition(byte[] pixels) {
         long brightnessSum = 0;
         long redSum = 0;
         long greenSum = 0;
@@ -56,10 +55,10 @@ public class ColorCompositionService {
         float redPercentage = (float) redSum / brightnessSum * 100;
         float greenPercentage = (float) greenSum / brightnessSum * 100;
         float bluePercentage = (float) blueSum / brightnessSum * 100;
-        Map<String, Float> compositions = new HashMap<>();
-        compositions.put("red", redPercentage);
-        compositions.put("green", greenPercentage);
-        compositions.put("blue", bluePercentage);
+        Map<String, Integer> compositions = new HashMap<>();
+        compositions.put("red", (int) redPercentage);
+        compositions.put("green", (int) greenPercentage);
+        compositions.put("blue", (int) bluePercentage);
         return compositions;
     }
 }

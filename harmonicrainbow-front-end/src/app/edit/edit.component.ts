@@ -17,6 +17,7 @@ export class EditComponent {
 
   @Input() image: Blob | undefined;
   @Output() imageChange = new EventEmitter<Blob>();
+  isHidden: boolean = false;
   constructor(private service: EditService) {
 
   }
@@ -91,5 +92,8 @@ export class EditComponent {
     const url = this.blackAndWhiteURL + "?name=" + this.nameOfImage + "&email=" + this.email;
     const image = await this.service.fetchBlackAndWhite(url, this.token, this.image);
     this.imageChange.emit(image);
+  }
+  hideForColorRangeChange() {
+    this.isHidden = true;
   }
 }

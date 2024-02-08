@@ -139,4 +139,7 @@ export class AppComponent implements OnInit{
     this.isAnalyzeWorkbench = false;
     this.isEditWorkbench = false;
   }
+  hideEditWorkbench() {
+    this.isEditWorkbench = false;
+  }
 }

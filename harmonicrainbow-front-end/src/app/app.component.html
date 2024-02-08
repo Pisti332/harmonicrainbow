@@ -6,11 +6,14 @@
     <p class="app" (click)="setDescription('edit')">EDIT</p>
     <p *ngIf="!isLoggedIn" class="app" (click)="setDescription(null)" (click)="triggerRegister()">REGISTER</p>
     <p *ngIf="!isLoggedIn" class="app" (click)="setDescription(null)" (click)="triggerLogin()">LOGIN</p>
-    <input type="file" requiredFileType="image/png" *ngIf="isLoggedIn" class="app" (change)="uploadImage($event)">
+    <label *ngIf="isLoggedIn" class="custom-file-upload">
+      <input type="file" requiredFileType="image/png" class="app" (change)="uploadImage($event)">
+      UPLOAD AN IMAGE
+    </label>
     <p *ngIf="isLoggedIn" class="app" (click)="disableWorkbenches()" (click)="logout()">LOGOUT</p>
   </nav>
   <app-analyze [token]="token" [email]="email" [nameOfImage]="currentImageName" *ngIf="isAnalyzeWorkbench"></app-analyze>
-  <app-edit [image]="blob" (imageChange)="updateImage($event)" [token]="token" [email]="email" [nameOfImage]="currentImageName" *ngIf="isEditWorkbench"></app-edit>
+  <app-edit (setEditWorkbench)="hideEditWorkbench()" [image]="blob" (imageChange)="updateImage($event)" [token]="token" [email]="email" [nameOfImage]="currentImageName" *ngIf="isEditWorkbench"></app-edit>
   <img class="app" id="current-image" (click)="hidePopUps()" (click)="setDescription(null)" (click)="disableWorkbenches()" [src]=currentImageURL>
   <p class="arrow" id="arrow-left" *ngIf="isLoggedIn" (click)="changeImages('L')">L</p>
   <p class="arrow" id="arrow-right" *ngIf="isLoggedIn" (click)="changeImages('R')">R</p>

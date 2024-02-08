@@ -8,6 +8,7 @@
     height: 50vh;
 }
 p {
+    cursor: pointer;
     flex: 0.1;
     backdrop-filter: blur(3px);
     letter-spacing: 2px;
@@ -20,4 +21,44 @@ p {
 }
 #color-change-input-block {
     z-index: 4;
+}
+#color-change-input-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.color-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.color-group label {
+    margin-bottom: 5px;
+}
+label {
+    color: white;
+}
+
+.color-group input {
+    margin-bottom: 10px;
+}
+
+button#change-color-range-btn {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button#change-color-range-btn:hover {
+    background-color: #0056b3;
+}
+.hideWhenColorRangeChange {
+    display: none;
 }

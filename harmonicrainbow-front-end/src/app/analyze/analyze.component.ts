@@ -16,7 +16,7 @@ export class AnalyzeComponent {
   @Input() token: string = '';
   inputValue: number = 0;
   brightness: number | null = null;
-  colorComposition: number[] | null = null;
+  colorComposition: string | null = null;
   constructor(private service: AnalyzeService) {
 
   }
@@ -29,12 +29,18 @@ export class AnalyzeComponent {
     const body = await response.json();
     this.brightness = body["brightness"];
   }
-  async getColorComposition() {
+  async getColorComposition(): Promise<number[]> {
     const response = await this.service.makeColorCompositionRequest(this.email, this.nameOfImage, this.token);
     const body = await response.json();
     const red = body["red"];
     const green = body["green"];
     const blue = body["blue"];
-    this.colorComposition = [red, green, blue];
+    return [red, green, blue];
+  }
+  async formatColorComposition() {
+    const colors = await this.getColorComposition();
+    const colorCompositionAsText = "Red: " + colors[0] + "%  Green: " +
+    colors[1] + "% Blue: " + colors[2] + "%";
+    this.colorComposition = colorCompositionAsText;
   }
 }
