@@ -1,5 +1,7 @@
 package com.pisti.harmonicrainbow.service;
 
+import com.pisti.harmonicrainbow.exceptions.CorruptImageException;
+import com.pisti.harmonicrainbow.exceptions.NoSuchImageException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
@@ -27,11 +29,11 @@ public class ColorCompositionService {
                 return getColorComposition(pixels);
             }
             catch (IOException e) {
-                return null;
+                throw new CorruptImageException("There was a problem while reading the image!");
             }
         }
         else {
-            return null;
+            throw new NoSuchImageException("No such image!");
         }
     }
     private Map<String, Integer> getColorComposition(byte[] pixels) {

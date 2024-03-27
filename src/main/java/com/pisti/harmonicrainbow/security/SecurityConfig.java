@@ -40,7 +40,8 @@ public class SecurityConfig {
                                     "main-MTUFV6IG.js",
                                     "polyfills-LZBJRJJE.js",
                                     "styles-3JZCYRXB.css"
-                                    ).permitAll()
+                                    ).hasAuthority("USER")
+//                            .requestMatchers("").hasAnyAuthority("ADMIN")
                             .anyRequest().authenticated();
                 })
                 .sessionManagement(

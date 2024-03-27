@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import java.util.Map;
 
 @RestController
@@ -16,15 +17,11 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class BrightnessAnalyticsController {
     private final BrightnessAnalyticsService analyticsService;
+
     @GetMapping("brightness")
     public ResponseEntity<Object> getImageBrightness(@RequestParam String email, @RequestParam String name) {
         Map<String, Integer> data = analyticsService.getBrightness(email, name);
-        if (data != null) {
-            return new ResponseEntity<>(data, HttpStatus.OK);
-        }
-        else {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
+        return new ResponseEntity<>(data, HttpStatus.OK);
     }
 
 }

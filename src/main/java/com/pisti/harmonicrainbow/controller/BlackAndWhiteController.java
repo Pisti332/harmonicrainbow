@@ -20,11 +20,6 @@ public class BlackAndWhiteController {
     @PostMapping(path = "black-and-white", produces = MediaType.IMAGE_JPEG_VALUE)
     public ResponseEntity<ByteArrayResource> getBlackAndWhite(@RequestParam String email, @RequestParam String name) {
         ByteArrayResource byteArrayResource = blackAndWhiteService.getBlackAndWhite(email, name);
-        if (byteArrayResource == null) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(null);
-        }
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .contentLength(byteArrayResource.contentLength())

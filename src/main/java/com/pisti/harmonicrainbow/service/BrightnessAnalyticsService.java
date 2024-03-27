@@ -1,5 +1,7 @@
 package com.pisti.harmonicrainbow.service;
 
+import com.pisti.harmonicrainbow.exceptions.CorruptImageException;
+import com.pisti.harmonicrainbow.exceptions.NoSuchImageException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
@@ -30,11 +32,11 @@ public class BrightnessAnalyticsService {
                 return response;
             }
             catch (IOException e) {
-                return null;
+                throw new CorruptImageException("There was a problem while reading the image!");
             }
         }
         else {
-            return null;
+            throw new NoSuchImageException("This image doesn't exist!");
         }
     }
     private int getBrightness(byte[] pixelArr) {

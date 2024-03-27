@@ -16,16 +16,12 @@ import java.util.Map;
 public class ColorChangeController {
 
     private final ColorChangeService colorChangeService;
+
     @PostMapping(path = "change-color", produces = MediaType.IMAGE_JPEG_VALUE)
     public ResponseEntity<Object> changeColor(@RequestBody Map<String, Map<String, Integer>> body,
-                                              @RequestParam String email, @RequestParam  String name) {
+                                              @RequestParam String email, @RequestParam String name) {
         ByteArrayResource byteArrayResource = colorChangeService.changeColors(body, email, name);
-        if (byteArrayResource == null) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
-        else {
-            return new ResponseEntity<>(byteArrayResource, HttpStatus.OK);
-        }
+        return new ResponseEntity<>(byteArrayResource, HttpStatus.OK);
     }
 }
 

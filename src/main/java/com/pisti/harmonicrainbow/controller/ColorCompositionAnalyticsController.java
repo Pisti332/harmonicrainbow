@@ -20,11 +20,7 @@ public class ColorCompositionAnalyticsController {
     @GetMapping("color-composition")
     public ResponseEntity<Object> getColorComposition(@RequestParam String email, @RequestParam String name) {
         Map<String, Integer> colorComposition = colorCompositionService.getColorComposition(email, name);
-        if (colorComposition == null) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
-        else {
-            return new ResponseEntity<>(colorComposition, HttpStatus.OK);
-        }
+        return new ResponseEntity<>(colorComposition, HttpStatus.OK);
+
     }
 }

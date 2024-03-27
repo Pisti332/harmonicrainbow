@@ -23,6 +23,7 @@ public class MyUserDetailsService implements UserDetailsService {
                 .builder()
                 .password(userFromRepo.getPassword())
                 .username(userFromRepo.getEmail())
+                .roles(userFromRepo.getRole())
                 .build();
     }
     public boolean isUserActive(String username) {

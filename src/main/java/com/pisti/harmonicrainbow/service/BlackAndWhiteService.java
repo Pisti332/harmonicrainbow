@@ -1,5 +1,7 @@
 package com.pisti.harmonicrainbow.service;
 
+import com.pisti.harmonicrainbow.exceptions.CorruptImageException;
+import com.pisti.harmonicrainbow.exceptions.NoSuchImageException;
 import com.pisti.harmonicrainbow.service.utility.ImageAnalyzer;
 import com.pisti.harmonicrainbow.service.utility.ImageConverter;
 import com.pisti.harmonicrainbow.service.utility.ImageInitializer;
@@ -42,10 +44,10 @@ public class BlackAndWhiteService {
                 return imageConverter.convertImage(newImage, formatName);
 
             } catch (IOException e) {
-                return null;
+                throw new CorruptImageException("There was a problem while reading the image!");
             }
         } else {
-            return null;
+            throw new NoSuchImageException("No such image!");
         }
     }
 
