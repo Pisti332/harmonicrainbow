@@ -1,6 +1,5 @@
 package com.pisti.harmonicrainbow.model;
 
-import com.pisti.harmonicrainbow.security.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,14 +20,13 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-public class User implements UserDetails {
-    public User(String email, String password, boolean isActive, UUID emailConfirmationToken, Role role) {
+public class User {
+    public User(String email, String password, boolean isActive, UUID emailConfirmationToken) {
         this.email = email;
         this.password = password;
         this.isActive = isActive;
         this.emailConfirmationToken = emailConfirmationToken;
         this.registryDate = LocalDateTime.now();
-        this.role = role;
     }
 
     @Id
@@ -46,38 +44,6 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private boolean isLoggedIn;
     @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Role role;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Image> images;
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
-    }
-
-    @Override
-    public String getUsername() {
-        return email;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
 }

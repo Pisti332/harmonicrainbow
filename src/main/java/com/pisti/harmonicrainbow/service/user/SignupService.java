@@ -3,7 +3,6 @@ package com.pisti.harmonicrainbow.service.user;
 import com.pisti.harmonicrainbow.model.User;
 import com.pisti.harmonicrainbow.model.DTOS.SignupForm;
 import com.pisti.harmonicrainbow.repository.UsersRepo;
-import com.pisti.harmonicrainbow.security.Role;
 import com.pisti.harmonicrainbow.service.utility.Validator;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -79,8 +78,7 @@ public class SignupService {
                         signupForm.email(),
                         passwordEncoder.encode(signupForm.password()),
                         false,
-                        emailConfirmationToken,
-                        Role.USER));
+                        emailConfirmationToken));
         sendEmail(emailConfirmationToken, signupForm.email());
         return validation;
     }
