@@ -3,6 +3,7 @@ package com.pisti.harmonicrainbow.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -43,8 +44,8 @@ public class SecurityConfig {
                                     "polyfills-LZBJRJJE.js",
                                     "styles-3JZCYRXB.css"
                                     ).permitAll()
-                            .requestMatchers("api/image/**").hasAnyRole(Role.ADMIN.toString(), Role.USER.toString())
-                            .anyRequest().hasAnyRole(Role.ADMIN.toString());
+                            .requestMatchers(HttpMethod.DELETE, "api/image/**").hasRole(Role.ADMIN.toString())
+                            .anyRequest().hasAnyRole(Role.ADMIN.toString(), Role.USER.toString());
                 })
                 .sessionManagement(
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
