@@ -28,6 +28,7 @@ export class AppComponent implements OnInit{
   isLoggedIn: boolean = false;
   token: string = '';
   email: string = '';
+  role: string = '';
   images: Array<Image> = [];
   descriptionState: string | null = null;
   isAnalyzeWorkbench: boolean = false;
@@ -40,6 +41,9 @@ export class AppComponent implements OnInit{
   decodeToken(token: string) {
     const decodedToken = jwt_decode.jwtDecode(token);
     this.email = decodedToken.sub ? decodedToken.sub : "";
+    console.log(token);
+    console.log(decodedToken);
+    // this.role = decodedToken.role ? decodedToken.sub : "";
   }
 
   async ngOnInit() {

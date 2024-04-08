@@ -54,6 +54,7 @@ public class SigninService {
                     .builder()
                     .password(user.getPassword())
                     .username(user.getUsername())
+                    .authorities(user.getAuthorities())
                     .build();
             String token = jwtService.generateToken(userDetails);
             if (!myUserDetailsService.isUserActive(authentication.getName())) {
