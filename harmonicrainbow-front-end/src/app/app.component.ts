@@ -11,6 +11,10 @@ import _ from './images.download';
 import * as jwt_decode from "jwt-decode";
 
 type Image = { name: string };
+type JwtPayloadWithRole = jwt_decode.JwtPayload & {
+    role: Role;
+};
+type Role = {authority: string};
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -22,13 +26,16 @@ type Image = { name: string };
 })
 export class AppComponent implements OnInit{
   IMAGE_URL = "/api/image";
+  IMAGE_URL_ADMIN = "/api/image/admin";
+  ADMIN = "ROLE_ADMIN";
+
   title = 'harmonicrainbow-front-end';
   login: boolean = false;
   register: boolean = false;
   isLoggedIn: boolean = false;
   token: string = '';
   email: string = '';
-  role: string = '';
+  role?: Role;
   images: Array<Image> = [];
   descriptionState: string | null = null;
   isAnalyzeWorkbench: boolean = false;
@@ -39,11 +46,9 @@ export class AppComponent implements OnInit{
   blob: Blob | undefined;
 
   decodeToken(token: string) {
-    const decodedToken = jwt_decode.jwtDecode(token);
+    const decodedToken = jwt_decode.jwtDecode(token) as JwtPayloadWithRole;
     this.email = decodedToken.sub ? decodedToken.sub : "";
-    console.log(token);
-    console.log(decodedToken);
-    // this.role = decodedToken.role ? decodedToken.sub : "";
+    this.role = decodedToken.role ? decodedToken.role : {authority: ""};
   }
 
   async ngOnInit() {
@@ -51,8 +56,13 @@ export class AppComponent implements OnInit{
     if (token) {
       this.token = token;
       this.setIsLoggedIn(true);
-      this.decodeToken(token);
-      const response = await _.downloadImages(this.IMAGE_URL, "/" + this.email, this.token);
+      this.decodeToken(token); 
+      const currentUrl = this.role?.authority === this.ADMIN ? this.IMAGE_URL_ADMIN : this.IMAGE_URL + "/" + this.email;
+
+      console.log(this.role);
+      console.log(this.ADMIN);
+
+      const response = await _.downloadImages(currentUrl, this.token);
       this.images = await response.json();
     }
   }
@@ -78,6 +88,7 @@ export class AppComponent implements OnInit{
     this.currentImageName = this.images[this.page].name;
     this.currentImageURL = URL.createObjectURL(blob);
   }
+
   async setImages(images: Promise<any>) {
     const response = await images;
     const body = await response.json();
@@ -122,7 +133,8 @@ export class AppComponent implements OnInit{
         },
         "body": formData
       });
-      const response = await _.downloadImages(this.IMAGE_URL, "/" + this.email, this.token);
+      const currentUrl = this.role?.authority === this.ADMIN ? this.IMAGE_URL_ADMIN : this.IMAGE_URL + "/" + this.email;
+      const response = await _.downloadImages(currentUrl, this.token);
       this.images = await response.json();
     }
   }

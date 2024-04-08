@@ -39,7 +39,7 @@ public class JWTService {
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         return Jwts
                 .builder()
-                .setClaims(Map.of("role", userDetails.getAuthorities()))
+                .setClaims(Map.of("role", userDetails.getAuthorities().toArray()[0]))
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
