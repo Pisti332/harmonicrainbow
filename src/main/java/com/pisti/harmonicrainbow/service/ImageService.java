@@ -1,5 +1,6 @@
 package com.pisti.harmonicrainbow.service;
 
+import com.pisti.harmonicrainbow.exceptions.NoSuchImageException;
 import com.pisti.harmonicrainbow.model.Image;
 import com.pisti.harmonicrainbow.model.User;
 import com.pisti.harmonicrainbow.repository.ImageRepo;
@@ -7,6 +8,7 @@ import com.pisti.harmonicrainbow.repository.UsersRepo;
 import com.pisti.harmonicrainbow.service.utility.ImageNameConverter;
 import com.pisti.harmonicrainbow.service.utility.ImageReader;
 import com.pisti.harmonicrainbow.service.utility.ImageResizer;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
@@ -90,5 +92,22 @@ public class ImageService {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    @Transactional
+    public ResponseEntity<Object> deleteImageByNameAndEmail(String email, String name) {
+        User user;
+        Integer isDelSuccessful;
+        try {
+            user = usersRepo.findByEmail(email);
+            isDelSuccessful = imageRepo.deleteByUserAndName(user, name);
+        }
+        catch (Exception e) {
+            throw new NoSuchImageException(e.getMessage());
+        }
+        if (user == null || isDelSuccessful == 0) {
+            throw new NoSuchImageException("Image doesn't exist with this name and email combination!");
+        }
+        else return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

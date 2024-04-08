@@ -49,6 +49,10 @@ public class ImageController {
         }
         else return new ResponseEntity<>(byteArrayResource, HttpStatus.OK);
     }
+    @DeleteMapping
+    public ResponseEntity<Object> deleteByNameAndEmail(@RequestParam String email, @RequestParam String name) {
+        return imageService.deleteImageByNameAndEmail(email, name);
+    }
 
 
 }

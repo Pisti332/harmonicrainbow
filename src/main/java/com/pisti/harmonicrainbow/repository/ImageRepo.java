@@ -13,5 +13,6 @@ import java.util.UUID;
 public interface ImageRepo extends JpaRepository<Image, UUID> {
     Set<Image> getImageByUser(User user);
     Image getImageByUserAndName(User user, String name);
+    Integer deleteByUserAndName(User user, String name);
 
 }
