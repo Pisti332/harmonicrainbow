@@ -12,8 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 @RequestMapping("api/image")
@@ -53,6 +52,9 @@ public class ImageController {
     public ResponseEntity<Object> deleteByNameAndEmail(@RequestParam String email, @RequestParam String name) {
         return imageService.deleteImageByNameAndEmail(email, name);
     }
-
-
+    @GetMapping("/admin")
+    public ResponseEntity<Object> getAllImages() {
+        List<Image> images = imageService.getAllImages();
+        return new ResponseEntity<>(images, HttpStatus.OK);
+    }
 }

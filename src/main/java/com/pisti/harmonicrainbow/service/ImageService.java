@@ -110,4 +110,7 @@ public class ImageService {
         }
         else return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+    public List<Image> getAllImages() {
+        return imageRepo.findAll();
+    }
 }

@@ -45,6 +45,7 @@ public class SecurityConfig {
                                     "styles-3JZCYRXB.css"
                                     ).permitAll()
                             .requestMatchers(HttpMethod.DELETE, "api/image/**").hasRole(Role.ADMIN.toString())
+                            .requestMatchers(HttpMethod.GET, "api/image/admin").hasRole(Role.ADMIN.toString())
                             .anyRequest().hasAnyRole(Role.ADMIN.toString(), Role.USER.toString());
                 })
                 .sessionManagement(
