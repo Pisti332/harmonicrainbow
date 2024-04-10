@@ -18,10 +18,10 @@ public class SaturationChangeController {
     private final SaturationChangeService saturationChangeService;
 
     @GetMapping(produces = MediaType.IMAGE_JPEG_VALUE)
-    public ResponseEntity<Object> changeSaturation(@RequestParam String email,
+    public ResponseEntity<Object> changeSaturation(@RequestParam String userId,
                                                    @RequestParam String name,
                                                    @RequestParam Integer saturation) {
-        ByteArrayResource byteArrayResource = saturationChangeService.changeSaturation(email, name, saturation);
+        ByteArrayResource byteArrayResource = saturationChangeService.changeSaturation(userId, name, saturation);
         if (byteArrayResource == null) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }

@@ -24,11 +24,11 @@ public class SaturationChangeService {
     private final ImageInitializer imageInitializer;
     private final ImageConverter imageConverter;
 
-    public ByteArrayResource changeSaturation(String email, String name, int saturation) {
+    public ByteArrayResource changeSaturation(String userId, String name, int saturation) {
         if (saturation > 100 || saturation < -100) {
             return null;
         }
-        ByteArrayResource imageResponse = imageService.getImageByEmailAndName(email, name);
+        ByteArrayResource imageResponse = imageService.getImageByUserIdAndName(userId, name);
         if (imageResponse != null) {
             try {
                 BufferedImage bufferedImage = ImageIO.read(imageResponse.getInputStream());

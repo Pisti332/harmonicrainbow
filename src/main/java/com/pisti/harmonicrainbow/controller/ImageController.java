@@ -41,16 +41,16 @@ public class ImageController {
         }
     }
     @GetMapping(produces = MediaType.IMAGE_JPEG_VALUE)
-    public ResponseEntity<Object> getImageByEmailAndName(@RequestParam String email, @RequestParam String name) {
-        ByteArrayResource byteArrayResource = imageService.getImageByEmailAndName(email, name);
+    public ResponseEntity<Object> getImageByEmailAndUserId(@RequestParam String userId, @RequestParam String name) {
+        ByteArrayResource byteArrayResource = imageService.getImageByUserIdAndName(userId, name);
         if (byteArrayResource == null) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
         else return new ResponseEntity<>(byteArrayResource, HttpStatus.OK);
     }
     @DeleteMapping
-    public ResponseEntity<Object> deleteByNameAndEmail(@RequestParam String email, @RequestParam String name) {
-        return imageService.deleteImageByNameAndEmail(email, name);
+    public ResponseEntity<Object> deleteByNameAndUserId(@RequestParam String userId, @RequestParam String name) {
+        return imageService.deleteImageByNameAndUserId(userId, name);
     }
     @GetMapping("/admin")
     public ResponseEntity<Object> getAllImages() {

@@ -10,7 +10,7 @@ import { OnInit } from '@angular/core';
 import _ from './images.download';
 import * as jwt_decode from "jwt-decode";
 
-type Image = { name: string };
+type Image = { name: string, userId: string };
 type JwtPayloadWithRole = jwt_decode.JwtPayload & {
     role: Role;
 };
@@ -35,6 +35,7 @@ export class AppComponent implements OnInit{
   isLoggedIn: boolean = false;
   token: string = '';
   email: string = '';
+  imageUserId: string = '';
   role?: Role;
   images: Array<Image> = [];
   descriptionState: string | null = null;
@@ -59,9 +60,6 @@ export class AppComponent implements OnInit{
       this.decodeToken(token); 
       const currentUrl = this.role?.authority === this.ADMIN ? this.IMAGE_URL_ADMIN : this.IMAGE_URL + "/" + this.email;
 
-      console.log(this.role);
-      console.log(this.ADMIN);
-
       const response = await _.downloadImages(currentUrl, this.token);
       this.images = await response.json();
     }
@@ -82,16 +80,16 @@ export class AppComponent implements OnInit{
     else if (direction === "R" && this.page !== this.images.length - 1) {
       this.page++;
     }
-    const image = await _.downloadImage(this.IMAGE_URL, this.email, this.images[this.page].name, this.token);
+    this.imageUserId = this.images[this.page].userId;
+    const image = await _.downloadImage(this.IMAGE_URL, this.imageUserId, this.images[this.page].name, this.token);
     const blob = await image.blob();
     this.blob = blob;
     this.currentImageName = this.images[this.page].name;
     this.currentImageURL = URL.createObjectURL(blob);
   }
 
-  async setImages(images: Promise<any>) {
-    const response = await images;
-    const body = await response.json();
+  async setImages(images: any) {
+    const body = await images.json();
     this.images = body;
     this.changeImages("");
   }

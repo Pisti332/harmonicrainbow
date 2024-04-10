@@ -22,8 +22,8 @@ public class BlackAndWhiteService {
     private final ImageInitializer imageInitializer;
     private final ImageConverter imageConverter;
 
-    public ByteArrayResource getBlackAndWhite(String email, String name) {
-        ByteArrayResource imageResponse = imageService.getImageByEmailAndName(email, name);
+    public ByteArrayResource getBlackAndWhite(String userId, String name) {
+        ByteArrayResource imageResponse = imageService.getImageByUserIdAndName(userId, name);
         if (imageResponse != null) {
             try {
                 BufferedImage bufferedImage = ImageIO.read(imageResponse.getInputStream());

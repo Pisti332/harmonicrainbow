@@ -18,8 +18,8 @@ public class ColorCompositionAnalyticsController {
     private final ColorCompositionService colorCompositionService;
 
     @GetMapping("color-composition")
-    public ResponseEntity<Object> getColorComposition(@RequestParam String email, @RequestParam String name) {
-        Map<String, Integer> colorComposition = colorCompositionService.getColorComposition(email, name);
+    public ResponseEntity<Object> getColorComposition(@RequestParam String userId, @RequestParam String name) {
+        Map<String, Integer> colorComposition = colorCompositionService.getColorComposition(userId, name);
         return new ResponseEntity<>(colorComposition, HttpStatus.OK);
 
     }

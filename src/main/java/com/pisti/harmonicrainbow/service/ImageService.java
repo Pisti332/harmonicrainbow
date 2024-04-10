@@ -10,6 +10,7 @@ import com.pisti.harmonicrainbow.service.utility.ImageReader;
 import com.pisti.harmonicrainbow.service.utility.ImageResizer;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.cfg.Environment;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,8 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -76,9 +79,9 @@ public class ImageService {
         return images;
     }
 
-    public ByteArrayResource getImageByEmailAndName(String email, String name) {
+    public ByteArrayResource getImageByUserIdAndName(String userId, String name) {
         try {
-            User user = usersRepo.findByEmail(email);
+            User user = usersRepo.findByUserId(UUID.fromString(userId));
             Image image = imageRepo.getImageByUserAndName(user, name);
             if (image == null) {
                 return null;
@@ -95,15 +98,21 @@ public class ImageService {
     }
 
     @Transactional
-    public ResponseEntity<Object> deleteImageByNameAndEmail(String email, String name) {
+    public ResponseEntity<Object> deleteImageByNameAndUserId(String userId, String name) {
         User user;
         Integer isDelSuccessful;
         try {
-            user = usersRepo.findByEmail(email);
+            user = usersRepo.findByUserId(UUID.fromString(userId));
+            var imageFormat = imageRepo.getImageByUserAndName(user, name).getFormat();
             isDelSuccessful = imageRepo.deleteByUserAndName(user, name);
+            var fileToDelete = UPLOAD_DIRECTORY + "/" + name + "." + imageFormat;
+            File file = new File(fileToDelete);
+            if (!file.delete()) {
+                throw new FileNotFoundException("The image is not present in the database!");
+            }
         }
         catch (Exception e) {
-            throw new NoSuchImageException(e.getMessage());
+            throw new NoSuchImageException("Something went wrong!");
         }
         if (user == null || isDelSuccessful == 0) {
             throw new NoSuchImageException("Image doesn't exist with this name and email combination!");

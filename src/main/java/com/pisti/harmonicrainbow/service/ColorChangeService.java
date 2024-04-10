@@ -23,11 +23,11 @@ public class ColorChangeService {
     private final ImageConverter imageConverter;
     private final ImageInitializer imageInitializer;
 
-    public ByteArrayResource changeColors(Map<String, Map<String, Integer>> body, String email, String name) {
+    public ByteArrayResource changeColors(Map<String, Map<String, Integer>> body, String userId, String name) {
         if (body.get("from") == null || body.get("to") == null || body.get("newColor") == null) {
             return null;
         }
-        ByteArrayResource imageResponse = imageService.getImageByEmailAndName(email, name);
+        ByteArrayResource imageResponse = imageService.getImageByUserIdAndName(userId, name);
         if (imageResponse != null) {
             try {
                 BufferedImage bufferedImage = ImageIO.read(imageResponse.getInputStream());

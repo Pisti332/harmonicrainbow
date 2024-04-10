@@ -6,8 +6,8 @@ import { Injectable } from '@angular/core';
 export class AnalyzeService {
 
   constructor() { }
-  async makeBrightnessAnalyticsRequest(email: string, nameOfImage: string, token: string) {
-    const URL = "/api/analytics/brightness?email=" + email + "&name=" + nameOfImage;
+  async makeBrightnessAnalyticsRequest(userId: string, nameOfImage: string, token: string) {
+    const URL = "/api/analytics/brightness?userId=" + userId + "&name=" + nameOfImage;
      return await fetch(URL, {
       method: "GET",
       headers: {
@@ -15,8 +15,8 @@ export class AnalyzeService {
       }
     });
   }
-  async makeColorCompositionRequest(email: string, nameOfImage: string, token: string) {
-    const URL = "/api/analytics/color-composition?email=" + email + "&name=" + nameOfImage;
+  async makeColorCompositionRequest(userId: string, nameOfImage: string, token: string) {
+    const URL = "/api/analytics/color-composition?userId=" + userId + "&name=" + nameOfImage;
      return await fetch(URL, {
       method: "GET",
       headers: {

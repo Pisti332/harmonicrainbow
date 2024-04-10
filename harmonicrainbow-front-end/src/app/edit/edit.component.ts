@@ -13,6 +13,7 @@ import { EditService } from './edit.service';
 export class EditComponent {
   @Input() token: string = ''
   @Input() email: string | undefined;
+  @Input() imageUserId: string | undefined;
   @Input() nameOfImage: string | undefined;
 
   @Input() image: Blob | undefined;
@@ -66,7 +67,7 @@ export class EditComponent {
           }
         }
       }
-      const response = await this.service.makeColorChangeRequest(this.changeColorURL, this.nameOfImage, this.email, body, this.token);
+      const response = await this.service.makeColorChangeRequest(this.changeColorURL, this.nameOfImage, this.imageUserId, body, this.token);
       const image = await response.blob();
       this.imageChange.emit(image);
     }
@@ -82,14 +83,14 @@ export class EditComponent {
     this.saturation = Number.parseInt(saturation);
   }
   async getSaturationChangedImage() {
-    const image = await this.service.callSaturationChangeEndpoint(this.saturationChangeURL, this.nameOfImage, this.email, this.saturation, this.token);
+    const image = await this.service.callSaturationChangeEndpoint(this.saturationChangeURL, this.nameOfImage, this.imageUserId, this.saturation, this.token);
     this.imageChange.emit(image);
   }
 
   value: number = 0;
 
   async getBlackAndWhite() {
-    const url = this.blackAndWhiteURL + "?name=" + this.nameOfImage + "&email=" + this.email;
+    const url = this.blackAndWhiteURL + "?name=" + this.nameOfImage + "&userId=" + this.imageUserId;
     const image = await this.service.fetchBlackAndWhite(url, this.token, this.image);
     this.imageChange.emit(image);
   }

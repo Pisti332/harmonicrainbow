@@ -12,6 +12,7 @@ import { AnalyzeService } from './analyze.service';
 })
 export class AnalyzeComponent {
   @Input() email: string = "";
+  @Input() imageUserId: string = "";
   @Input() nameOfImage: string = "";
   @Input() token: string = '';
   inputValue: number = 0;
@@ -25,12 +26,12 @@ export class AnalyzeComponent {
     this.inputValue = Number.parseInt((event.target as HTMLInputElement).value);
   }
   async getBrightness() {
-    const response = await this.service.makeBrightnessAnalyticsRequest(this.email, this.nameOfImage, this.token);
+    const response = await this.service.makeBrightnessAnalyticsRequest(this.imageUserId, this.nameOfImage, this.token);
     const body = await response.json();
     this.brightness = body["brightness"];
   }
   async getColorComposition(): Promise<number[]> {
-    const response = await this.service.makeColorCompositionRequest(this.email, this.nameOfImage, this.token);
+    const response = await this.service.makeColorCompositionRequest(this.imageUserId, this.nameOfImage, this.token);
     const body = await response.json();
     const red = body["red"];
     const green = body["green"];

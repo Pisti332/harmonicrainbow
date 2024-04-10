@@ -7,6 +7,9 @@ import * as jwt_decode from "jwt-decode";
 type JwtPayloadWithRole = jwt_decode.JwtPayload & {
   role: string;
 };
+type Role = {
+  authority: string
+}
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -18,10 +21,11 @@ export class LoginComponent {
   private LOGIN_URL: string = "/api/user/signin";
   private IMAGE_URL: string = "/api/image/";
   private IMAGE_URL_ADMIN: string = "/api/image/admin/";
-  @Input() token: string = "";
+  private ADMIN = "ADMIN_ROLE";
   protected isPopupShowing: boolean = false;
   protected popupMessage: string | undefined;
-  ADMIN = "ADMIN_ROLE";
+  
+  @Input() token: string = "";
 
   @Output() tokenEvent = new EventEmitter<string>();
   @Output() loginEvent = new EventEmitter<boolean>();
@@ -36,7 +40,7 @@ export class LoginComponent {
 
   getRoleFromToken(token: string): string {
     const decodedToken = jwt_decode.jwtDecode(token) as JwtPayloadWithRole;
-    return decodedToken.role ? decodedToken.role : "";
+    return decodedToken.role;
   }
 
   async onSubmit() {
@@ -45,11 +49,11 @@ export class LoginComponent {
     const response = await this.makeLoginRequest(email ?? '', password ?? '', this.LOGIN_URL);
     const headers: Headers = response.headers;
     const token = headers.get('authorization');
-    let role: string = "";
+    let role: Role = {"authority": ""};
     if (token) {
       localStorage.setItem('token', token);
       this.tokenEvent.emit(token);
-      role = this.getRoleFromToken(token);
+      role.authority = this.getRoleFromToken(token);
     }
     const body = await response.json();
     if (!response.ok) {
@@ -60,9 +64,10 @@ export class LoginComponent {
       this.isLoggedInEvent.emit(true);
       if (email) {
         this.emailEvent.emit(email);
-        const currentUrl = role?.includes(this.ADMIN) ? this.IMAGE_URL_ADMIN : this.IMAGE_URL + "/" + email;
+        console.log(role.authority);
+        const currentUrl = role.authority === this.ADMIN ? this.IMAGE_URL_ADMIN : this.IMAGE_URL + "/" + email;
         const images = _.downloadImages(currentUrl, token);
-        this.imagesEvent.emit(images);
+        this.imagesEvent.emit(await images);
       }
     }
   }

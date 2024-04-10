@@ -7,9 +7,9 @@ export class EditService {
 
   constructor() { }
   async callSaturationChangeEndpoint(saturationChangeURL: string,
-    nameOfImage: string | undefined, email: string | undefined,
+    nameOfImage: string | undefined, userId: string | undefined,
     saturation: number, token: string) {
-    const url = saturationChangeURL + "?name=" + nameOfImage + "&email=" + email +
+    const url = saturationChangeURL + "?name=" + nameOfImage + "&userId=" + userId +
      "&saturation=" + saturation;
     const response = await fetch(url, {
       method: "GET",
@@ -29,8 +29,8 @@ export class EditService {
     })
     return await response.blob();
   }
-  async makeColorChangeRequest(changeColorURL: string, nameOfImage: string | undefined, email: string | undefined, body: string, token: string) {
-    const url = changeColorURL + "?name=" + nameOfImage + "&email=" + email;
+  async makeColorChangeRequest(changeColorURL: string, nameOfImage: string | undefined, userId: string | undefined, body: string, token: string) {
+    const url = changeColorURL + "?name=" + nameOfImage + "&userId=" + userId;
     return await fetch(url, {
       method: "POST",
       headers: {

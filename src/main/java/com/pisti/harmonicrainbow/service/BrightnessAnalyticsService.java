@@ -20,8 +20,8 @@ import java.util.Map;
 public class BrightnessAnalyticsService {
     private final ImageService imageService;
 
-    public Map<String, Integer> getBrightness(String email, String name) {
-        ByteArrayResource imageResponse = imageService.getImageByEmailAndName(email, name);
+    public Map<String, Integer> getBrightness(String userId, String name) {
+        ByteArrayResource imageResponse = imageService.getImageByUserIdAndName(userId, name);
         if (imageResponse != null) {
             try {
                 BufferedImage bufferedImage = ImageIO.read(imageResponse.getInputStream());

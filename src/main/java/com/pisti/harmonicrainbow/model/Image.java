@@ -2,6 +2,7 @@ package com.pisti.harmonicrainbow.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -28,7 +29,10 @@ public class Image {
     @Column(nullable = false)
     private String format;
     @JsonIgnore
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @Column(name="user_id", insertable=false, updatable=false)
+    private UUID userId;
 }

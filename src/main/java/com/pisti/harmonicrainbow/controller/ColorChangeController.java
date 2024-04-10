@@ -19,8 +19,8 @@ public class ColorChangeController {
 
     @PostMapping(path = "change-color", produces = MediaType.IMAGE_JPEG_VALUE)
     public ResponseEntity<Object> changeColor(@RequestBody Map<String, Map<String, Integer>> body,
-                                              @RequestParam String email, @RequestParam String name) {
-        ByteArrayResource byteArrayResource = colorChangeService.changeColors(body, email, name);
+                                              @RequestParam String userId, @RequestParam String name) {
+        ByteArrayResource byteArrayResource = colorChangeService.changeColors(body, userId, name);
         return new ResponseEntity<>(byteArrayResource, HttpStatus.OK);
     }
 }
