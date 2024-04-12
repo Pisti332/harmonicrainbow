@@ -62,6 +62,7 @@ export class AppComponent implements OnInit{
 
       const response = await _.downloadImages(currentUrl, this.token);
       this.images = await response.json();
+      this.changeImages("");
     }
   }
 
@@ -73,7 +74,11 @@ export class AppComponent implements OnInit{
     this.currentImageURL = URL.createObjectURL(image);
   }
 
-  async changeImages(direction: String) {
+  test(str: string) {
+    console.log(str);
+  }
+
+  async changeImages(direction: string) {
     if (direction === "L" && this.page !== 0) {
       this.page--;
     }
@@ -89,9 +94,10 @@ export class AppComponent implements OnInit{
   }
 
   async setImages(images: any) {
-    const body = await images.json();
+    const response = await images;
+    const body = await response.json();
     this.images = body;
-    this.changeImages("");
+    await this.changeImages("");
   }
 
   setEmail(email: string) {
