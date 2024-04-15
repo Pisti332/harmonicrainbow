@@ -67,10 +67,7 @@ export class LoginComponent {
       this.isLoggedInEvent.emit(true);
       this.emailEvent.emit(email ?? "");
       const currentUrl = role === this.ADMIN ? this.IMAGE_URL_ADMIN : this.IMAGE_URL + "/" + email;
-      console.log(role);
-      console.log(this.ADMIN);
       const images = _.downloadImages(currentUrl, token);
-      console.log(currentUrl);
       this.imagesEvent.emit(images); 
     }
   }
