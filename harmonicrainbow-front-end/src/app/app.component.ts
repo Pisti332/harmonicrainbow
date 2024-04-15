@@ -25,6 +25,8 @@ type Role = {authority: string};
   styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit{
+  readonly PLACEHOLDER_IMG: string = "assets/img/root-template.jpg";
+
   IMAGE_URL = "/api/image";
   IMAGE_URL_ADMIN = "/api/image/admin";
   ADMIN = "ROLE_ADMIN";
@@ -41,7 +43,7 @@ export class AppComponent implements OnInit{
   descriptionState: string | null = null;
   isAnalyzeWorkbench: boolean = false;
   isEditWorkbench: boolean = false;
-  currentImageURL: string = "assets/img/root-template.jpg";
+  currentImageURL: string = this.PLACEHOLDER_IMG;
   currentImageName: string = "";
   page: number = 0;
   blob: Blob | undefined;
@@ -72,10 +74,6 @@ export class AppComponent implements OnInit{
 
   updateImage(image: Blob) {
     this.currentImageURL = URL.createObjectURL(image);
-  }
-
-  test(str: string) {
-    console.log(str);
   }
 
   async changeImages(direction: string) {
@@ -123,6 +121,9 @@ export class AppComponent implements OnInit{
     this.token = '';
     this.setIsLoggedIn(false);
     localStorage.removeItem('token');
+    this.images = [];
+    this.page = 0;
+    this.currentImageURL = this.PLACEHOLDER_IMG;
   }
   async uploadImage(event: any): Promise<void> {
     const file: File = event.target.files[0];

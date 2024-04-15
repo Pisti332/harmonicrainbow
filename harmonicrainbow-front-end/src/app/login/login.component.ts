@@ -56,7 +56,6 @@ export class LoginComponent {
       localStorage.setItem('token', token);
       this.tokenEvent.emit(token);
       role = this.getRoleFromToken(token);
-      //the following test line only works until this place, doesn't in the conditional branches it seems like!
     }
     if (!response.ok) {
       const body = await response.json();
